@@ -1,0 +1,142 @@
+ENDELES v4.4
+Bosque espectral para escuchar caminando.
+Parte de la colección Alchemy of Meaning (Alquimia del Significado).
+© 2026 Héctor Cruz Juárez · https://hectorcruz.com.mx
+Software libre bajo licencia GPL-3.0-or-later (ver LICENSE).
+Usa three.js r128 (MIT, ver lib/three-LICENSE.txt). Clima real: Open-Meteo.
+I Ching: versión libre en español desde el texto chino y la traducción de James Legge (1882),
+ambos de dominio público.
+
+INSTALACIÓN
+  La carpeta fuente/ guarda los textos del I Ching y el reloj astronómico por separado,
+  para leerlos o editarlos; index.html ya los lleva incluidos. Para cambiar la app, edita
+  desarrollo/src.html o fuente/*.js y ejecuta: python3 desarrollo/construir.py
+  Sube la carpeta endeles/ completa a tu servidor, por ejemplo /app/endeles/,
+  y abre https://tu-dominio/app/endeles/
+  three.js va incluido en lib/. Sin internet funciona todo menos el clima real.
+  Sírvela por https: el audio y «mi ubicación» lo necesitan.
+
+EL UMBRAL (lo primero que aparece)
+  1 · el bosque     qué es y cómo funciona.
+  2 · tus datos     nombre, nacimiento y lugar donde vives; nada es obligatorio.
+  3 · tu pregunta   opcional; el I Ching responde mejor a una pregunta abierta.
+  4 · la tirada     seis líneas de milenrama, de abajo hacia arriba. La tirada construye el bosque:
+                    el trigrama de abajo da el suelo (relieve, escala, densidad), el de arriba
+                    la atmósfera, y si hay líneas que cambian el bosque se transforma hacia el
+                    hexagrama de llegada durante unos siete minutos de caminata.
+  «entrar sin tirada» abre el bosque de siempre. La tirada queda como la del día; volver a
+  tirar pide confirmación. «i › volver al umbral» o «pistas › nueva tirada» regresan aquí.
+  Todo sigue siendo modificable después en clima, atmósfera y mapa.
+
+CONTROLES
+  Escritorio: WASD o flechas para caminar, Shift corre, arrastra o haz clic para mirar
+              (Esc libera el puntero). E abre y cierra una gema · 1–6 clima · F película · P recorrido
+              · L relámpago · H oculta. Al abrir una gema el mouse queda libre; al cerrarla
+              (botón, E, Esc o clic fuera) vuelve a mirar.
+  iPhone/tablet: joystick a la izquierda (siempre visible), arrastra a la derecha para mirar,
+              toca una gema o su botón para abrirla. Las ventanas salen como hoja inferior
+              desde «☰ menú», cada una con su ×. La primera vez aparece una guía de manos.
+              Usa audífonos; en iPhone quita el modo silencio para oír el bosque.
+  Minimapa: tócalo para saltar a ese punto.
+
+ESPACIOS SONOROS Y FAUNA
+  Cada espacio tiene un radio pleno (suena completo) y un alcance (donde se apaga).
+  En «sonido»: selecciona un espacio, ajusta radio, alcance y volumen, y carga un MP3.
+  La fauna responde al clima: ranas con lluvia y de noche (si hace más de 6 °C),
+  grillos de noche con ritmo según la temperatura (ley de Dolbear), búho de noche,
+  cuervos y pájaro carpintero de día, menos activos con lluvia.
+
+ARTEFACTOS Y PISTAS (ventana «pistas»)
+  Bajo seis espacios sonoros brilla un artefacto, lo único con color en el bosque gris.
+  Acércate y pulsa «abrir» (o E), o haz clic sobre él. Cada uno guarda un hexagrama del I Ching
+  con su juicio, su imagen y una pregunta de exploración:
+    ámbar    El Sol de hoy          hexagrama y línea donde está el Sol (cambia cada ~6 días)
+    verde    La Tierra de hoy       el punto opuesto al Sol
+    azul     La Luna de esta hora   cambia cada ~10 horas (está sobre el estanque)
+    rojo     Tu Sol al nacer        requiere tu fecha de nacimiento
+    rosa     Lo que está adentro    el hexagrama nuclear de tu tirada (líneas 2 a 5)
+    violeta  Tirada de milenrama    seis líneas con las probabilidades de las varillas;
+                                    muestra las líneas que cambian y el hexagrama al que llevan
+  El calendario que reparte los 64 hexagramas en el círculo del cielo (5.625° cada uno, desde
+  2° de Acuario) sigue el orden de la rueda que usa Human Design; Endeles solo usa ese orden.
+  Cada gema muestra «en pocas palabras» (resumen llano escrito para Endeles), el juicio, la imagen
+  y una pregunta. «¿cómo se lee?» abre una guía breve del I Ching. En «sonido» puedes cambiar qué artefacto guarda cada espacio, o quitarlo.
+  Tu nacimiento y el cuaderno se guardan solo en ese navegador. El cuaderno se puede copiar.
+  Las pistas son invitaciones a la reflexión, no predicciones.
+
+JARDINES Y MISIÓN
+  Cada gema es energía vital: a su alrededor se abre un claro con hierba, flores de colores
+  y polinizadores (abejas y mariposas de día, luciérnagas de noche) y un zumbido suave.
+  Al leer una gema y cerrar la lectura, la gema se apaga: se vuelve piedra, se asienta en
+  la tierra, pierde su columna de luz, y su energía pasa al jardín, que florece más.
+  El contador junto al mapa muestra las gemas por leer; en el mapa, las apagadas son huecas.
+  Cuando apagas todas las del día, el bosque se llena de luciérnagas. Al día siguiente
+  vuelven a encenderse. La gema roja cuenta si diste tu nacimiento; la rosa, si hiciste tirada.
+
+CLIMA REAL (Open-Meteo, sin clave para uso no comercial)
+  Elige un lugar guardado, busca una ciudad (solo el nombre; «Loreto, Baja California»
+  también funciona) o escribe coordenadas «lat, lon». Haz lo mismo con la costa para la marea.
+  Si la marea sale «sin dato», el punto cae en tierra: usa coordenadas un poco mar adentro. «leer ahora» trae temperatura, humedad,
+  nubes, viento, lluvia, nieve y visibilidad, y del mar el nivel (incluye marea) y las olas.
+  El sol puede tomar su posición real según la hora y el lugar.
+  La marea sube y baja el estanque; las olas mueven su superficie.
+  «seguir en vivo» vuelve a leer cada 15 minutos.
+
+MAPA
+  Semilla, relieve, escala y separación de árboles generan otro bosque.
+  «ver mapa grande»: ir, poner espacios, sumar puntos de recorrido o mover espacios.
+  «exportar» da el mapa completo en JSON (mundo, espacios y recorridos);
+  pégalo y pulsa «aplicar» para recuperarlo. Los MP3 hay que volver a cargarlos.
+
+RENDIMIENTO (atmósfera › rendimiento)
+  automático: baja o sube la resolución para sostener la fluidez y, si no basta,
+  pasa a un perfil menor. Perfiles alta, media y baja fijos.
+  El bosque está dividido en parcelas de 60 m: se dibujan solo las que ve la cámara
+  y la niebla deja ver; las lejanas usan árboles simplificados.
+  Las sombras se recalculan al moverse o al cambiar el sol, no en cada cuadro.
+  Lluvia, nieve, esporas y bruma no se dibujan cuando están en cero.
+  Un espacio sonoro fuera de su alcance se apaga y despierta al acercarte.
+  El panel muestra resolución, dibujos por cuadro, triángulos, parcelas y sonidos activos.
+
+RECORRIDOS DE CÁMARA
+  Agrega puntos donde estás, graba caminando o traza en el mapa grande.
+  Duración, vuelo (altura extra), mirar hacia adelante y bucle.
+  La cámara lleva los oídos: un recorrido es también una caminata sonora.
+
+HISTORIAL
+  v4.4  jardines alrededor de cada gema (hierba, flores, polinizadores, zumbido); la gema se
+        apaga al leerse y su luz florece en el jardín; contador de gemas por leer y aviso al
+        apagarlas todas; los árboles se apartan para abrir cada jardín.
+  v4.3  librería de lectura: guía «¿cómo se lee?» (umbral, ventana de pistas y cada gema) y
+        «en pocas palabras» para los 64 hexagramas; la gema rosa ahora es el hexagrama nuclear
+        de la tirada («Lo que está adentro») en lugar del Sol de diseño; el I Ching es el centro
+        y la rueda queda como calendario; el cuaderno copia también el resumen.
+  v4.2.2 colisiones: el agua solo detiene dentro del estanque (antes cualquier hondonada más baja
+        que el agua era una pared invisible y la cámara flotaba sobre ella); los arbolitos se
+        atraviesan; los troncos tienen un margen más justo; al chocar se desliza por el costado.
+        En 6 bosques de prueba, 30 de 30 trayectos entre gemas llegan sin trabarse.
+  v4.2.1 cada gema se coloca en el punto caminable más cercano a su sonido: fuera del agua
+        (aun con marea alta), lejos de troncos y dentro del bosque; la Luna queda en la orilla
+        del estanque. Saltar con el mapa o con «ir allí» también lleva a tierra firme.
+  v4.2  versión para teléfono: menú compacto, ventanas como hoja inferior con botón cerrar,
+        joystick visible, guía de primera vez, controles y deslizadores más grandes, campos
+        a 16 px (sin zoom en iPhone), mapa arriba; umbral más breve; la vista inicial mira
+        hacia la gema más cercana y el claro de llegada es más amplio y sin rocas.
+  v4.1  umbral de entrada en cuatro pasos; la tirada construye el suelo y la atmósfera y se
+        transforma con las líneas que cambian; la pregunta queda en la tirada y en el cuaderno;
+        el mouse se suelta al abrir una gema y vuelve al cerrarla; E abre y cierra.
+  v4.0  capa de autoconocimiento: artefactos de color que sobreviven a la película HP5, con columna
+        de luz y halo; 64 hexagramas en versión libre (juicio, imagen, pregunta); reloj del Sol,
+        la Tierra y la Luna en la rueda de puertas; Sol natal y de diseño; tirada de milenrama con
+        hexagrama de transformación; ventana de pistas, nacimiento y cuaderno; artefactos en el mapa.
+  v0.3.1 corrige las ventanas que no se cerraban al abrir la pieza desde un servidor propio.
+  v0.3  optimización: parcelas con ocultamiento por cámara y niebla, árboles lejanos
+        simplificados, sombras bajo demanda, resolución adaptativa, perfiles de calidad,
+        partículas apagadas en cero, espacios sonoros que duermen lejos; búsqueda de
+        lugares más tolerante, lugares guardados y coordenadas manuales.
+  v0.2  nombre Endeles; estanque con marea, oleaje y juncos; fauna sonora que responde
+        al clima; clima real con Open-Meteo y sol real; generador de bosques por semilla;
+        mapa grande editable; recorridos de cámara; temperatura, marea y oleaje como parámetros.
+  v0.1  bosque sin hojas procedural, tinta, niebla, bruma, esporas, lluvia y nieve;
+        película HP5; seis climas con transición; cinco espacios sonoros binaurales;
+        carga de MP3, mapa en JSON y minimapa.
