@@ -331,9 +331,24 @@ body.sinui .bar,body.sinui #col,body.sinui #map,body.sinui #info,body.sinui #hin
 <div id="mision" hidden aria-live="polite"><span id="misTxt"></span><span id="misGem"></span></div>
 <div id="aviso" hidden></div>
 
+<div id="xinasOv" class="ov" hidden>
+  <div class="win ubox" style="--pc:#9fe6c8">
+    <h3>Endeles <span>· el claro de las semillas</span></h3>
+    <div class="in">
+      <h4 class="uh">Tu semilla ya está en la tierra.</h4>
+      <p>Endeles es un bosque espectral para escuchar caminando: árboles sin hojas, tinta, niebla y grano de película.</p>
+      <p>En un claro del bosque crecen las semillas de <b>Xinas</b>. Cada una es el instante de alguien —un retrato, un minuto, un lugar— sembrado para siempre.</p>
+      <p>Aquí no hace falta volver a tirar: tu planta guarda el hexagrama de su instante.</p>
+      <div class="ucast" id="xHex"></div>
+      <p>Crecerá un poco cada día, aunque la tira ya no exista. Camina hacia la luz.</p>
+      <p class="note">Mejor con audífonos. En iPhone quita el modo silencio para oír el bosque.</p>
+      <div class="ubtn"><button class="on" id="xEntrar">entrar al bosque</button><button id="xTirada">hacer también mi tirada</button></div>
+    </div>
+  </div>
+</div>
 <div id="start" class="ov">
   <div class="win ubox" id="uBox" style="--pc:#b58cff">
-    <h3>Endeles <span>v4.4</span></h3>
+    <h3>Endeles <span>v4.5</span></h3>
     <nav class="usteps" id="uSteps"><button data-u="0" class="on">1 · bosque</button><button data-u="1">2 · datos</button><button data-u="2">3 · pregunta</button><button data-u="3">4 · tirada</button></nav>
     <div class="in" id="uIn">
       <section data-p="0">
@@ -341,6 +356,7 @@ body.sinui .bar,body.sinui #col,body.sinui #map,body.sinui #info,body.sinui #hin
         <p>Cada sonido vive en un lugar del bosque. Bajo seis de ellos brilla una gema con un hexagrama del I Ching:</p>
         <div class="ucol" id="uCol"></div>
         <p>Antes de entrar haces una tirada, y la tirada construye el bosque.</p>
+        <p>En un claro crecen las semillas de <b>Xinas</b>: instantes de otras personas, sembrados para siempre.</p>
         <p class="note" id="uHint"></p>
         <div class="ubtn"><button class="on" id="uIr1">comenzar</button><button id="uGuia">¿cómo se lee?</button><button id="uDirecto">entrar sin tirada</button></div>
       </section>
@@ -564,6 +580,208 @@ function zonaOffset(utc,tz){try{const p=new Intl.DateTimeFormat('en-US',{timeZon
 function localAUTC(y,mo,d,h,mi,tz){const w=Date.UTC(y,mo-1,d,h,mi);let u=w-zonaOffset(w,tz);u=w-zonaOffset(u,tz);return u;}
 window.ASTRO={sunLon,moonLon,puerta,fmtLon,lineas,desdeLineas,trigramas,nuclear,tirada,diseno,localAUTC,zonaOffset,ORDEN,BITS};
 })();
+
+</script>
+<script>
+/* planta.js · núcleo compartido de Xinas, el visor AR y Endeles
+   Código semilla (13 caracteres) → planta procedural determinista, hexagrama, edad y medidas de la tira.
+   Colección Alchemy of Meaning · Héctor Cruz Juárez · GPL-3.0 */
+(function(G){
+'use strict';
+const D2R = Math.PI/180;
+const clamp = (v, a=0, b=1) => Math.min(b, Math.max(a, v));
+/* ---------------- utilidades ---------------- */
+function mulberry32(a){ return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function fnv(bytes){ let h = 2166136261; for (const b of bytes){ h ^= b; h = Math.imul(h, 16777619); } return h >>> 0; }
+const B32 = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+function encode(bytes){ let n = 0n; for (const b of bytes) n = (n << 8n) | BigInt(b); n <<= 1n; let s = ''; for (let i=0;i<13;i++){ s = B32[Number(n & 31n)] + s; n >>= 5n; } return s; }
+function decode(code){ let n = 0n; for (const ch of code.toUpperCase()){ const k = B32.indexOf(ch); if (k < 0) return null; n = (n << 5n) | BigInt(k); } n >>= 1n; const out = []; for (let i=0;i<8;i++){ out.unshift(Number(n & 255n)); n >>= 8n; } return out; }
+
+/* ---------------- vectores ---------------- */
+const add = (a,b) => [a[0]+b[0], a[1]+b[1], a[2]+b[2]], mul = (a,k) => [a[0]*k, a[1]*k, a[2]*k];
+const dot = (a,b) => a[0]*b[0]+a[1]*b[1]+a[2]*b[2], cross = (a,b) => [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]];
+const norm = a => { const l = Math.hypot(a[0],a[1],a[2]) || 1; return [a[0]/l, a[1]/l, a[2]/l]; };
+function rotate(v, k, t){ const c = Math.cos(t), s = Math.sin(t), kv = cross(k, v), kd = dot(k, v)*(1-c); return [v[0]*c + kv[0]*s + k[0]*kd, v[1]*c + kv[1]*s + k[1]*kd, v[2]*c + kv[2]*s + k[2]*kd]; }
+function perp(d){ const r = Math.abs(d[1]) < .9 ? [0,1,0] : [1,0,0]; return norm(cross(d, r)); }
+
+/* ---------------- planta procedural ----------------
+   Todo sale del código: 6 lecturas de la foto + 2 bytes de sal.
+   El visor AR usará esta misma función para hacerla crecer. */
+function grow(bytes){
+  const f = { b:bytes[0]/255, c:bytes[1]/255, e:bytes[2]/255, a:bytes[3]/255, x:bytes[4]/255, y:bytes[5]/255 };
+  const rng = mulberry32(fnv(bytes));
+  const P = {
+    levels: 2 + Math.round(f.e*3),
+    spread: (22 + f.c*36)*D2R,
+    twist: (137.5 + (f.a - .5)*90)*D2R,
+    lean: (f.x - .5)*.9,
+    bend: (.5 - f.y)*.9,
+    decay: .56 + f.c*.16,
+    kids: 2 + (f.e > .45 ? 1 : 0),
+    orn: f.b > .56 ? 'flor' : f.e > .38 ? 'hoja' : 'yema',
+    leafy: .25 + f.b*.6,
+    petals: 5 + Math.floor(rng()*4)
+  };
+  const segs = [], leaves = [], tips = [], roots = [];
+  function branch(p, dir, len, depth, t0){
+    const n = 6, dt = len*(.55 + rng()*.2);
+    const bAx = norm(cross(dir, perp(dir).map((v,i) => v + (rng()-.5)*.6)));
+    const pts = [p], dirs = [dir]; let cur = p, d = dir;
+    for (let i=0;i<n;i++){
+      d = rotate(d, bAx, P.bend*len/n + (rng()-.5)*.14);
+      d = norm(add(d, [0, .05 + depth*.02, 0]));
+      const nx = add(cur, mul(d, len/n));
+      segs.push({a:cur, b:nx, t0:t0 + dt*i/n, t1:t0 + dt*(i+1)/n, d:depth});
+      if (depth >= 1 && i % 2 === 1 && rng() < P.leafy){
+        const side = rotate(perp(d), d, rng()*Math.PI*2);
+        leaves.push({p:nx, d:norm(add(side, mul(d, .6))), t:t0 + dt*(i+1)/n, s:len*.32*(.7 + rng()*.5)});
+      }
+      cur = nx; pts.push(cur); dirs.push(d);
+    }
+    if (depth < P.levels){
+      const k = P.kids + (rng() < .3 ? 1 : 0);
+      for (let j=0;j<k;j++){
+        const fr = depth === 0 ? .32 + .68*(j+1)/k : .4 + .6*(j+1)/k;
+        const i = Math.min(n, Math.round(fr*n)), q = pts[i], dq = dirs[i];
+        const az = j*P.twist + depth*1.31 + (rng()-.5)*.5;
+        const side = rotate(perp(dq), dq, az);
+        const sp = P.spread*(.8 + rng()*.45);
+        const cd = norm(add(mul(dq, Math.cos(sp)), mul(side, Math.sin(sp))));
+        branch(q, cd, len*P.decay*(.78 + rng()*.35)*(1 - .2*fr), depth + 1, t0 + dt*fr);
+      }
+    } else tips.push({p:cur, d, t:t0 + dt, s:len*.45, kind:P.orn});
+  }
+  const nr = 3 + Math.floor(rng()*3);
+  for (let r=0;r<nr;r++){
+    let p = [0,0,0], d = norm([(rng()-.5)*1.6, -1, (rng()-.5)*1.6]);
+    for (let i=0;i<4;i++){ d = norm(add(d, [(rng()-.5)*.5, -.2, (rng()-.5)*.5])); const nx = add(p, mul(d, .07 + rng()*.05)); roots.push({a:p, b:nx, t0:i*.025, t1:(i+1)*.025}); p = nx; }
+  }
+  branch([0,0,0], norm([Math.sin(P.lean), 1, 0]), 1, 0, .04);
+  const cy = segs[0].b, az = rng()*Math.PI;
+  for (const sg of [1, -1]) leaves.push({p:cy, d:norm([Math.cos(az)*sg, .55, Math.sin(az)*sg]), t:segs[0].t1, s:.16, coty:true});
+  let tmax = 0; for (const s of segs) tmax = Math.max(tmax, s.t1); for (const t of tips) tmax = Math.max(tmax, t.t + .12);
+  const k = 1/tmax;
+  segs.forEach(s => { s.t0 *= k; s.t1 *= k; }); leaves.forEach(l => l.t *= k); tips.forEach(t => t.t *= k);
+  return { f, P, segs, leaves, tips, roots };
+}
+
+function plantBox(pl, age, rotY){
+  const c = Math.cos(rotY), s = Math.sin(rotY); let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+  const pt = v => { const x = v[0]*c + v[2]*s; if (x < x0) x0 = x; if (x > x1) x1 = x; if (v[1] < y0) y0 = v[1]; if (v[1] > y1) y1 = v[1]; };
+  pt([0,0,0]);
+  for (const r of pl.roots) if (r.t0 < age) pt(r.b);
+  for (const l of pl.leaves) if (l.t < age) pt(add(l.p, mul(l.d, l.s)));
+  for (const g of pl.segs) if (g.t0 < age){ pt(g.a); pt(g.b); }
+  for (const t of pl.tips) if (t.t < age){ pt(add(t.p, [t.s*.6, t.s*.6, 0])); pt(add(t.p, [-t.s*.6, 0, 0])); }
+  return {x0, x1, y0, y1};
+}
+
+function drawPlant(x, pl, age, T){
+  const c = Math.cos(T.rot), s = Math.sin(T.rot);
+  const P = v => [T.ox + (v[0]*c + v[2]*s)*T.s, T.oy - v[1]*T.s];
+  x.save(); x.strokeStyle = T.col; x.fillStyle = T.col; x.lineCap = 'round'; x.lineJoin = 'round';
+  // raíces
+  x.lineWidth = Math.max(1, T.lw*.5); x.globalAlpha = T.dimRoots ?? .55; x.beginPath();
+  for (const r of pl.roots){ if (r.t0 >= age) continue; const fr = clamp((age - r.t0)/(r.t1 - r.t0)); const a = P(r.a), b = P(add(r.a, mul([r.b[0]-r.a[0], r.b[1]-r.a[1], r.b[2]-r.a[2]], fr))); x.moveTo(a[0], a[1]); x.lineTo(b[0], b[1]); }
+  x.stroke(); x.globalAlpha = 1;
+  // tallos por grosor
+  const by = new Map();
+  for (const g of pl.segs){ if (g.t0 >= age) continue; (by.get(g.d) || by.set(g.d, []).get(g.d)).push(g); }
+  for (const [d, list] of by){
+    x.lineWidth = Math.max(T.min ?? 1, T.lw*Math.pow(.7, d)); x.beginPath();
+    for (const g of list){ const fr = clamp((age - g.t0)/(g.t1 - g.t0)); const a = P(g.a), b = P([g.a[0] + (g.b[0]-g.a[0])*fr, g.a[1] + (g.b[1]-g.a[1])*fr, g.a[2] + (g.b[2]-g.a[2])*fr]); x.moveTo(a[0], a[1]); x.lineTo(b[0], b[1]); }
+    x.stroke();
+  }
+  // hojas
+  x.lineWidth = Math.max(T.min ?? 1, T.lw*.35);
+  for (const l of pl.leaves){
+    if (l.t >= age) continue; const g = clamp((age - l.t)/.08); const a = P(l.p), b = P(add(l.p, mul(l.d, l.s*g)));
+    const mx = (a[0]+b[0])/2, my = (a[1]+b[1])/2, nx = -(b[1]-a[1])*.32, ny = (b[0]-a[0])*.32;
+    x.beginPath(); x.moveTo(a[0], a[1]); x.quadraticCurveTo(mx + nx, my + ny, b[0], b[1]); x.quadraticCurveTo(mx - nx, my - ny, a[0], a[1]);
+    T.fillLeaves ? x.fill() : x.stroke();
+  }
+  // remates
+  for (const t of pl.tips){
+    if (t.t >= age) continue; const g = clamp((age - t.t)/.12), p = P(t.p), r = t.s*T.s*g;
+    if (t.kind === 'yema'){ x.beginPath(); x.arc(p[0], p[1], Math.max(1, r*.22), 0, 7); x.fill(); continue; }
+    if (t.kind === 'hoja'){ const b = P(add(t.p, mul(t.d, t.s*g))); const mx = (p[0]+b[0])/2, my = (p[1]+b[1])/2, nx = -(b[1]-p[1])*.35, ny = (b[0]-p[0])*.35; x.beginPath(); x.moveTo(p[0],p[1]); x.quadraticCurveTo(mx+nx, my+ny, b[0], b[1]); x.quadraticCurveTo(mx-nx, my-ny, p[0], p[1]); x.fill(); continue; }
+    const n = pl.P.petals; x.beginPath();
+    for (let i=0;i<n;i++){ const an = i/n*Math.PI*2 + pl.f.a*3; const ex = p[0] + Math.cos(an)*r*.5, ey = p[1] + Math.sin(an)*r*.5;
+      x.moveTo(p[0], p[1]); x.quadraticCurveTo(p[0] + Math.cos(an + .5)*r*.55, p[1] + Math.sin(an + .5)*r*.55, ex, ey); x.quadraticCurveTo(p[0] + Math.cos(an - .5)*r*.55, p[1] + Math.sin(an - .5)*r*.55, p[0], p[1]); }
+    x.stroke(); x.beginPath(); x.arc(p[0], p[1], Math.max(1, r*.1), 0, 7); x.fill();
+  }
+  x.restore();
+}
+
+
+/* ---------------- hexagrama ----------------
+   Las 6 lecturas, de abajo hacia arriba: brillo, contraste, bordes, ángulo, masa x, masa y.
+   ≥ 0.5 es línea entera (yang); menor, partida (yin). */
+const TRIG = ['111','100','010','001','000','011','101','110'];   // cielo, trueno, agua, montaña, tierra, viento, fuego, lago
+const KW = [
+  [1,34,5,26,11,9,14,43],[25,51,3,27,24,42,21,17],[6,40,29,4,7,59,64,47],[33,62,39,52,15,53,56,31],
+  [12,16,8,23,2,20,35,45],[44,32,48,18,46,57,50,28],[13,55,63,22,36,37,30,49],[10,54,60,41,19,61,38,58]];
+const NOMBRES = ['', 'lo creativo','lo receptivo','la dificultad del inicio','la juventud','la espera','el conflicto','el ejército','la unión',
+  'la pequeña fuerza que doma','el paso','la paz','el estancamiento','la comunidad','la gran posesión','la modestia','el entusiasmo',
+  'el seguimiento','lo que se repara','el acercamiento','la contemplación','la mordida','la gracia','el desmoronamiento','el retorno',
+  'la inocencia','la gran fuerza que doma','la nutrición','el gran exceso','el abismo','el fuego que se adhiere','el influjo','la duración',
+  'la retirada','el gran poder','el avance','la luz que se oculta','la familia','la oposición','el obstáculo','la liberación',
+  'la disminución','el aumento','la resolución','el encuentro','la reunión','el ascenso','el agotamiento','el pozo',
+  'la transformación','el caldero','el trueno','la quietud','el desarrollo gradual','la que se casa','la abundancia','el viajero',
+  'lo suave','la alegría','la dispersión','la medida','la verdad interior','el pequeño exceso','después de cumplir','antes de cumplir'];
+function hexagram(f){
+  const v = [f.b, f.c, f.e, f.a, f.x, f.y], lines = v.map(k => k >= .5 ? 1 : 0);
+  const lo = TRIG.indexOf(lines.slice(0,3).join('')), up = TRIG.indexOf(lines.slice(3).join(''));
+  const n = KW[lo][up]; return { lines, n, name:NOMBRES[n] };
+}
+
+/* ---------------- tiempo ----------------
+   El instante se guarda en minutos desde 2026-01-01 (UTC). Día 0 = el retrato;
+   la planta madura con los días (la mitad del camino en ~2 semanas). */
+const EPOCH = Date.UTC(2026, 0, 1);
+function dayIndex(d){ return Math.floor((Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) - EPOCH)/864e5); }
+function minuteIndex(ms){ return Math.floor((ms - EPOCH)/6e4); }
+function minuteToDate(m){ return new Date(EPOCH + m*6e4); }
+function ageFromDays(days, brote = .45){ return clamp(brote + (1 - brote)*(1 - Math.exp(-Math.max(0, days)/21))); }
+const ETAPAS = [[.08,'semilla'],[.3,'raíz'],[.45,'brote'],[.6,'tallo'],[.75,'ramas'],[.9,'hojas'],[1.01,'flor']];
+function stage(age, orn){ for (const [k, n] of ETAPAS) if (age < k) return n === 'flor' ? (orn === 'flor' ? 'flor' : orn === 'hoja' ? 'follaje' : 'yemas') : n; return 'plenitud'; }
+
+/* ---------------- el instante ----------------
+   Los bytes 6 y 7 de la semilla salen del minuto y del lugar (redondeado a ~1 km).
+   Misma foto en otro momento u otro lugar → otra planta. */
+function momentBytes(minute, lat, lon){
+  const s = `${minute}|${lat == null ? '-' : lat.toFixed(2)}|${lon == null ? '-' : lon.toFixed(2)}`;
+  const h = fnv(Array.from(s, c => c.charCodeAt(0) & 255)); return [(h >>> 8) & 255, h & 255];
+}
+
+/* ---------------- color ----------------
+   Paleta coseno (a + b·cos(2π(c·t + d))) que sale de la semilla: cada planta tiene sus tonos.
+   El visor la recorre con el ángulo de la mirada para el brillo iridiscente. */
+function palette(bytes){
+  const r = mulberry32(fnv(bytes) ^ 0x9e3779b9), base = bytes[0]/255*.35 + bytes[3]/255*.65;
+  return { a:[.55, .55, .6], b:[.45, .45, .4], c:[1, 1, 1], d:[base, base + .18 + r()*.2, base + .42 + r()*.25], span:.5 + bytes[1]/255*.6 };
+}
+function paletteRGB(P, t){ return [0,1,2].map(i => clamp(P.a[i] + P.b[i]*Math.cos(6.28318*(P.c[i]*t + P.d[i])))); }
+
+/* ---------------- la tira (v2: 58 × 88 mm) ----------------
+   Medidas en puntos de 203 dpi (8 por mm). La planta brota del retrato: su raíz está
+   en ROOT, abajo al centro de la foto; el visor AR la ancla ahí a partir del QR. */
+const TIRA = { V:2, PW:384, DPMM:8, H:704, PHOTO_Y:28, PHOTO:384, QR_Y:420, QR_BOX:200, QUIET:2, ROOT_X:192, ROOT_Y:396 };
+function qrGeom(n){ const q = TIRA.QUIET, m = Math.floor(TIRA.QR_BOX/(n + 2*q)), off = Math.floor((TIRA.QR_BOX - m*(n + 2*q))/2) + q*m; return { m, x:off, y:TIRA.QR_Y + off, size:m*n }; }
+/* raíz relativa a la esquina superior izquierda del QR, en mm; y lado del QR en mm */
+function anchorMM(n){ const g = qrGeom(n); return { x:(TIRA.ROOT_X - g.x)/TIRA.DPMM, y:(TIRA.ROOT_Y - g.y)/TIRA.DPMM, side:g.size/TIRA.DPMM }; }
+function fromCode(code){ const b = decode(code); return b ? grow(b) : null; }
+/* ?s=CÓDIGO&t=MINUTO (base 36). Si t es corto (≤ 3 caracteres) es un día, como en la tira v1. */
+function parseURL(href){
+  try { const u = new URL(href); const s = (u.searchParams.get('s') || '').trim().toUpperCase(), t = u.searchParams.get('t');
+    if (!/^[0-9A-HJKMNP-TV-Z]{13}$/.test(s)) return null;
+    let minute = null; if (t){ const v = parseInt(t, 36); if (!isNaN(v)) minute = t.length <= 3 ? v*1440 : v; }
+    return { code:s, minute }; } catch(e){ return null; }
+}
+
+G.Planta = { VERSION:'2', clamp, mulberry32, fnv, encode, decode, grow, fromCode, plantBox, drawPlant, hexagram, dayIndex, minuteIndex, minuteToDate, ageFromDays, stage, momentBytes, palette, paletteRGB, TIRA, qrGeom, anchorMM, parseURL,
+  vec:{ add, mul, dot, cross, norm, rotate, perp } };
+})(typeof window !== 'undefined' ? window : globalThis);
 
 </script>
 <script>
@@ -1588,7 +1806,7 @@ function colisionar(px,pz,x,z){
   return[x,z];
 }
 function move(dt){
-  let f=0,s=0;const quieto=!$('pistaOv').hidden||!$('start').hidden||!$('guiaOv').hidden;
+  let f=0,s=0;const quieto=!$('pistaOv').hidden||!$('start').hidden||!$('guiaOv').hidden||!$('xinasOv').hidden;
   if(keys.KeyW||keys.ArrowUp)f+=1;if(keys.KeyS||keys.ArrowDown)f-=1;if(keys.KeyD||keys.ArrowRight)s+=1;if(keys.KeyA||keys.ArrowLeft)s-=1;
   let run=keys.ShiftLeft||keys.ShiftRight;
   if(quieto){f=0;s=0;}
@@ -1712,6 +1930,102 @@ function frame(now){
   if(now-mapT>100){mapT=now;drawMapTo(mx,360,false);if(!$('bigOv').hidden)drawMapTo(bx,720,true);}
 }
 
+/* ---------- el claro de las semillas (Xinas) ----------
+   Cada semilla de Xinas es el instante de alguien: un retrato, un minuto, un lugar.
+   Aquí crece como un arbusto de luz, el único color del bosque además de las gemas.
+   La planta sale del mismo código con planta.js, así que es la misma de la tira y del visor;
+   su edad depende de los días desde el retrato. semillas.php guarda la lista (solo códigos y minutos). */
+const CLARO={x:34,z:22,r:13};
+clearings.push([CLARO.x,CLARO.z,CLARO.r]);
+const SEM=[];let semGeo=null,semMesh=null,semPts=null,semBeam=null,miSem=null;
+const XQ=(()=>{try{const p=new URLSearchParams(location.search),s=(p.get('s')||'').toUpperCase(),t=p.get('t');
+  if(!/^[0-9A-HJKMNP-TV-Z]{13}$/.test(s))return null;let m=t?parseInt(t,36):NaN;if(!isNaN(m)&&t.length<=3)m*=1440;return{s,t:isNaN(m)?null:m};}catch(e){return null;}})();
+const semU={uT:PU.uT,uFogD:PU.uFogD};
+const SEMVS=`attribute vec4 aP;attribute vec2 aQ;uniform float uT;varying vec3 vN,vW;varying vec4 vP;varying vec2 vQ;varying float vD;
+void main(){vP=aP;vQ=aQ;vec3 p=position;float sw=aQ.y*aQ.y*.06;p.x+=sin(uT*1.3+p.y*1.7+p.z)*sw;p.z+=cos(uT*1.1+p.y*1.3+p.x)*sw*.7;
+  vec4 w=modelMatrix*vec4(p,1.);vW=w.xyz;vN=normalize(mat3(modelMatrix)*normal);vec4 mv=viewMatrix*w;vD=-mv.z;gl_Position=projectionMatrix*mv;}`;
+const SEMFS=`uniform float uT,uFogD;varying vec3 vN,vW;varying vec4 vP;varying vec2 vQ;varying float vD;
+void main(){vec3 V=normalize(cameraPosition-vW);float f=1.-abs(dot(normalize(vN),V));float k=vQ.x;
+  float span=k<.5?vP.w*.4+.2:vP.w*1.1+.4,off=k<.5?0.:.25,rim=k<.5?.45:.85,gain=k<.5?1.:.8;
+  vec3 c=vec3(.55,.55,.6)+vec3(.45,.45,.4)*cos(6.28318*(off+f*span+vQ.y*.35+uT*.025+vP.xyz));
+  c*=gain*(1.-rim+rim*(.35+1.4*pow(f,1.6)));
+  float fo=exp(-pow(uFogD*vD*.5,2.));gl_FragColor=vec4(min(c*1.08,vec3(1.)),(k<.5?.95:.82)*fo);}`;
+const ADD_LUZ={blending:THREE.CustomBlending,blendEquation:THREE.AddEquation,blendSrc:THREE.OneFactor,blendDst:THREE.OneFactor,blendSrcAlpha:THREE.ZeroFactor,blendDstAlpha:THREE.OneMinusSrcAlphaFactor,transparent:true,depthWrite:false};
+const semMat=new THREE.ShaderMaterial(Object.assign({uniforms:semU,vertexShader:SEMVS,fragmentShader:SEMFS,side:THREE.DoubleSide},ADD_MASK));
+const semPtsMat=new THREE.ShaderMaterial(Object.assign({uniforms:Object.assign({uS:{value:1}},semU),
+  vertexShader:`attribute vec3 aC;attribute float aR;uniform float uT,uFogD,uS;varying vec3 vC;varying float vF;void main(){vec4 mv=modelViewMatrix*vec4(position,1.);float d=-mv.z;vF=exp(-pow(uFogD*d*.5,2.));
+    vC=aC*(.75+.25*sin(uT*1.7+aR*20.));gl_PointSize=clamp(uS*aR*240./max(d,.5),1.,64.);gl_Position=projectionMatrix*mv;}`,
+  fragmentShader:`varying vec3 vC;varying float vF;void main(){float d=length(gl_PointCoord-.5);float a=smoothstep(.5,0.,d);a*=a;gl_FragColor=vec4(vC*a*vF*1.3,a*vF);}`},ADD_LUZ));
+/* la planta hecha geometría en metros: tallos de 4 caras, hojas y pétalos de 2 triángulos */
+function hornear(){
+  const P=window.Planta;if(!P||!SEM.length)return;
+  const pos=[],nor=[],aP=[],aQ=[],idx=[],pp=[],pc=[],pr=[];let v=0;
+  const V=P.vec;
+  for(const e of SEM){
+    const pl=e.pl,s=e.esc,ag=e.edad,o=[e.x,H(e.x,e.z)-.02,e.z],pal=P.palette(P.decode(e.s)),d=pal.d,span=pal.span,top=Math.max(.3,P.plantBox(pl,1,0).y1);
+    const W=q=>[o[0]+q[0]*s,o[1]+q[1]*s,o[2]+q[2]*s];
+    const vert=(q,n,k,h)=>{pos.push(q[0],q[1],q[2]);nor.push(n[0],n[1],n[2]);aP.push(d[0],d[1],d[2],span);aQ.push(k,h);return v++;};
+    for(const g of pl.segs){if(g.t0>=ag)continue;const fr=Math.min(1,(ag-g.t0)/(g.t1-g.t0));
+      const a=g.a,b=[a[0]+(g.b[0]-a[0])*fr,a[1]+(g.b[1]-a[1])*fr,a[2]+(g.b[2]-a[2])*fr],dir=V.norm([b[0]-a[0],b[1]-a[1],b[2]-a[2]]);
+      const u=V.perp(dir),w=V.cross(dir,u),r=Math.max(.016,.045*Math.pow(.66,g.d))/s;const base=v;
+      for(const [p0,hh] of [[a,a[1]/top],[b,b[1]/top]])for(let i=0;i<4;i++){const an=i*Math.PI/2,n=V.add(V.mul(u,Math.cos(an)),V.mul(w,Math.sin(an)));vert(W(V.add(p0,V.mul(n,r))),n,0,hh);}
+      for(let i=0;i<4;i++){const j=(i+1)%4;idx.push(base+i,base+j,base+4+i,base+j,base+4+j,base+4+i);}}
+    const hoja=(p,dir,len,k)=>{const side=V.perp(dir),n=V.cross(dir,side),m=V.add(p,V.mul(dir,len*.5)),hh=p[1]/top;
+      const b0=vert(W(p),n,1,hh),b1=vert(W(V.add(m,V.mul(side,len*.17))),n,1,hh),b2=vert(W(V.add(p,V.mul(dir,len))),n,1,hh),b3=vert(W(V.add(m,V.mul(side,-len*.17))),n,1,hh);idx.push(b0,b1,b2,b0,b2,b3);};
+    for(const l of pl.leaves){if(l.t>=ag)continue;hoja(l.p,l.d,l.s*Math.min(1,(ag-l.t)/.08));}
+    for(const t of pl.tips){if(t.t>=ag)continue;const g=Math.min(1,(ag-t.t)/.12),q=W(t.p),col=P.paletteRGB(pal,.5+t.p[1]*.2);
+      pp.push(q[0],q[1],q[2]);pc.push(col[0],col[1],col[2]);pr.push(t.kind==='flor'?.16:.1);
+      if(t.kind==='hoja')hoja(t.p,t.d,t.s*g);
+      else if(t.kind==='flor'){const u=V.perp(t.d),w=V.cross(t.d,u),k=pl.P.petals;for(let i=0;i<k;i++){const an=i/k*Math.PI*2+pl.f.a*3;hoja(t.p,V.norm(V.add(V.add(V.mul(u,Math.cos(an)),V.mul(w,Math.sin(an))),V.mul(t.d,.35))),t.s*g*.5);}}}
+  }
+  if(semMesh){scene.remove(semMesh);semGeo.dispose();}if(semPts){scene.remove(semPts);semPts.geometry.dispose();}
+  semGeo=new THREE.BufferGeometry();semGeo.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));semGeo.setAttribute('normal',new THREE.Float32BufferAttribute(nor,3));
+  semGeo.setAttribute('aP',new THREE.Float32BufferAttribute(aP,4));semGeo.setAttribute('aQ',new THREE.Float32BufferAttribute(aQ,2));semGeo.setIndex(v>65535?new THREE.Uint32BufferAttribute(idx,1):new THREE.Uint16BufferAttribute(idx,1));
+  semMesh=new THREE.Mesh(semGeo,semMat);semMesh.frustumCulled=false;semMesh.renderOrder=3;scene.add(semMesh);
+  const pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.Float32BufferAttribute(pp,3));pg.setAttribute('aC',new THREE.Float32BufferAttribute(pc,3));pg.setAttribute('aR',new THREE.Float32BufferAttribute(pr,1));
+  semPts=new THREE.Points(pg,semPtsMat);semPts.frustumCulled=false;semPts.renderOrder=4;scene.add(semPts);
+  if(miSem){if(!semBeam){const bm=new THREE.ShaderMaterial(Object.assign({uniforms:{uCol:{value:new THREE.Color()},uFogD:PU.uFogD,uAmt:{value:.8}},vertexShader:beamVS,
+      fragmentShader:`uniform vec3 uCol;uniform float uFogD,uAmt;varying float vD,vY;void main(){float f=exp(-pow(uFogD*vD*.42,2.));float a=(1.-vY)*(1.-vY)*f*uAmt*.55;gl_FragColor=vec4(uCol,a);}`,side:THREE.DoubleSide},ADD_MASK));
+      semBeam=new THREE.Mesh(beamGeo,bm);semBeam.frustumCulled=false;scene.add(semBeam);}
+    const c=window.Planta.paletteRGB(window.Planta.palette(window.Planta.decode(miSem.s)),.3);semBeam.material.uniforms.uCol.value.setRGB(c[0],c[1],c[2]);semBeam.position.set(miSem.x,H(miSem.x,miSem.z),miSem.z);}
+}
+/* cada semilla tiene su lugar: una espiral desde el centro del claro, en el orden en que se sembraron */
+function sembrarLista(lista){
+  const P=window.Planta;if(!P)return;SEM.length=0;const ahora=P.minuteIndex(Date.now());
+  lista.forEach((x,i)=>{const b=P.decode(x.s);if(!b)return;const pl=P.grow(b),h0=P.fnv(b)/4294967296;
+    const an=i*2.39996+h0*.9,r=i?1.9+1.5*Math.sqrt(i):0;const px=CLARO.x+Math.cos(an)*r,pz=CLARO.z+Math.sin(an)*r;
+    const top=Math.max(.3,P.plantBox(pl,1,0).y1),alto=1.5+h0*.9;
+    SEM.push({s:x.s,t:x.t,x:px,z:pz,pl,esc:alto/top,edad:P.ageFromDays(x.t==null?0:Math.max(0,(ahora-x.t)/1440)),hex:P.hexagram(pl.f)});});
+  miSem=XQ?SEM.find(e=>e.s===XQ.s)||null:null;
+  hornear();
+}
+function cargarSemillas(){
+  return fetch('semillas.php',{cache:'no-store'}).then(r=>r.ok?r.json():{semillas:[]}).catch(()=>({semillas:[]})).then(j=>{
+    const L=Array.isArray(j.semillas)?j.semillas.slice():[];
+    if(XQ&&!L.some(x=>x.s===XQ.s))L.push({s:XQ.s,t:XQ.t});
+    sembrarLista(L);return L.length;});
+}
+/* el terreno cambia con la tirada: las plantas se vuelven a asentar en el suelo */
+buildWorld=(orig=>function(){orig.apply(this,arguments);if(SEM.length)hornear();})(buildWorld);
+/* al acercarte, la planta dice de quién es el instante (sin nombres: solo su número y su hexagrama) */
+let semCerca=null;
+setInterval(()=>{if(!SEM.length||!$('start').hidden)return;let m=null,md=3.2;for(const e of SEM){const d=Math.hypot(e.x-pos.x,e.z-pos.z);if(d<md){md=d;m=e;}}
+  if(m&&m!==semCerca){const w=window.Planta.minuteToDate(m.t||0),p=n=>String(n).padStart(2,'0');const Hx=IC.hex[m.hex.n];
+    avisar(`semilla ${m.s.slice(0,4)} ${m.s.slice(4,8)} ${m.s.slice(8)} · ${m===miSem?'tu instante · ':''}${p(w.getDate())}.${p(w.getMonth()+1)}.${w.getFullYear()} ${p(w.getHours())}:${p(w.getMinutes())} · ${m.hex.n} ${Hx?Hx.n:''}`,4200);}
+  semCerca=m;},400);
+/* llegada desde Xinas: una entrada propia, sin tirada (la planta ya trae el hexagrama de su instante) */
+function llegadaXinas(){
+  $('start').hidden=true;$('xinasOv').hidden=false;
+  const e=miSem;if(e){const Hx=IC.hex[e.hex.n];$('xHex').innerHTML=hexHTML(e.hex.n)+`<div><b>${e.hex.n} · ${Hx?Hx.n:''}</b><br><span class="note">${Hx?Hx.k:''}</span></div>`;}
+}
+function entrarAlClaro(){
+  $('xinasOv').hidden=true;entrar(null);
+  const e=miSem||{x:CLARO.x,z:CLARO.z};const dx=e.x-CLARO.x,dz=e.z-CLARO.z,dl=Math.hypot(dx,dz)||1;
+  const ux=dl>.5?dx/dl:0,uz=dl>.5?dz/dl:1;let px=e.x+ux*5,pz=e.z+uz*5;if(!caminable(px,pz)){px=e.x-ux*5;pz=e.z-uz*5;}
+  pos.set(px,0,pz);yaw=Math.atan2(-(e.x-pos.x),-(e.z-pos.z));pitch=.06;eyeY=H(pos.x,pos.z)+1.65;
+  avisar('camina hacia la luz: ahí está tu semilla',5000);
+}
+
 /* ---------- entrada ---------- */
 const hintTxt=isTouch?'Joystick a la izquierda · arrastra a la derecha para mirar · toca una gema para abrirla · toca el mapa para saltar':'Haz clic para mirar con el mouse (Esc lo suelta) · WASD o flechas para caminar · Shift corre · E abre y cierra una gema · 1–6 clima · F película · H oculta';
 $('uHint').textContent=isTouch?'Mejor con audífonos. En iPhone quita el modo silencio para oír el bosque.':'Mejor con audífonos.';$('hint').textContent=hintTxt;$('hint').style.opacity=0;
@@ -1822,6 +2136,9 @@ syncMapUI();buildWorld();eyeY=H(pos.x,pos.z)+1.65;
 setQuality('auto');renderPistas();renderList();renderRoutes();$('tJson').value=exportJSON();syncUI();
 if(CUA.some(c=>c.tipo==='tirada'&&c.dia===dia()))irPaso(3);
 mirarGema();
+$('xEntrar').onclick=entrarAlClaro;$('xTirada').onclick=()=>{$('xinasOv').hidden=true;$('start').hidden=false;irPaso(0);};
+if(XQ)$('start').hidden=true;
+cargarSemillas().then(()=>{if(XQ)llegadaXinas();});
 requestAnimationFrame(frame);
 })();
 </script>

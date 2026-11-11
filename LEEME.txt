@@ -1,4 +1,4 @@
-ENDELES v4.4
+ENDELES v4.5
 Bosque espectral para escuchar caminando.
 Parte de la colección Alchemy of Meaning (Alquimia del Significado).
 © 2026 Héctor Cruz Juárez · https://hectorcruz.com.mx
@@ -140,3 +140,15 @@ HISTORIAL
   v0.1  bosque sin hojas procedural, tinta, niebla, bruma, esporas, lluvia y nieve;
         película HP5; seis climas con transición; cinco espacios sonoros binaurales;
         carga de MP3, mapa en JSON y minimapa.
+
+
+EL CLARO DE LAS SEMILLAS (v4.5)
+  En (34, 22) hay un claro donde crecen las semillas de Xinas: arbustos de luz iridiscente,
+  uno por cada retrato sembrado. La planta sale del mismo código con fuente/planta.js (copia de
+  la de Xinas), así que es idéntica a la de la tira y del visor. Crece con los días.
+  · semillas.php  GET da la lista; POST {"s":CÓDIGO,"t":MINUTO} siembra (una vez por código,
+                  máximo 20 por hora por visitante, sin guardar IP ni datos personales).
+                  Crea datos/ con su .htaccess. PHP debe poder escribir en la carpeta.
+  · ?s=CÓDIGO&t=MINUTO  entrada desde Xinas: bienvenida propia, sin tirada (el hexagrama viene
+                  en la semilla), y aparece junto a su planta, marcada con un haz de luz.
+  · Sin PHP (GitHub Pages) el bosque funciona igual y muestra solo la semilla del enlace.
