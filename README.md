@@ -1,8 +1,10 @@
 # Endeles
 
+<img src="iconos/icono-512.png" alt="ícono de Endeles" width="96" align="right">
+
 ![Endeles: jardín alrededor de una gema](docs/capturas/04-jardin-gema.png)
 
-**Versión 4.5** · [Abrir en el navegador](https://loquellega.github.io/endeles/)
+**Versión 4.6** · [Abrir en el navegador](https://loquellega.github.io/endeles/)
 
 ## Español
 
@@ -30,7 +32,8 @@ Es una página estática: no necesita base de datos. Solo el claro de las semill
 1. Sube la carpeta completa a cualquier hosting, por ejemplo `/app/endeles/`, o usa GitHub Pages.
 2. Ábrela por https. El audio y «mi ubicación» lo necesitan.
 3. three.js va incluido en `lib/`. Sin internet funciona todo menos el clima real.
-4. Para el claro de las semillas, el hosting necesita PHP. `semillas.php` crea la carpeta `datos/` (cerrada al público con su `.htaccess`) y guarda ahí la lista: solo códigos, minutos y fecha de siembra, sin retratos, nombres ni IP. PHP debe poder escribir en la carpeta de Endeles. Sin PHP, como en GitHub Pages, el bosque funciona igual y muestra solo la semilla del enlace.
+4. Se guarda en la pantalla de inicio del teléfono como app (en Safari: Compartir › «Agregar a inicio»): abre a pantalla completa, con su ícono y su carátula de arranque, y sin conexión una vez abierta. Para eso van junto a `index.html` el `manifest.webmanifest`, el `sw.js` y la carpeta `iconos/`. El semillero (`semillas.php`) siempre se consulta en la red.
+5. Para el claro de las semillas, el hosting necesita PHP. `semillas.php` crea la carpeta `datos/` (cerrada al público con su `.htaccess`) y guarda ahí la lista: solo códigos, minutos y fecha de siembra, sin retratos, nombres ni IP. PHP debe poder escribir en la carpeta de Endeles. Sin PHP, como en GitHub Pages, el bosque funciona igual y muestra solo la semilla del enlace.
 
 Controles de escritorio: clic para mirar con el mouse (Esc lo suelta), WASD o flechas para caminar, Shift para correr, E abre y cierra una gema, 1–6 cambia el clima, F la película, P reproduce un recorrido y H oculta la interfaz.
 

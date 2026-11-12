@@ -1,4 +1,4 @@
-ENDELES v4.5
+ENDELES v4.6
 Bosque espectral para escuchar caminando.
 Parte de la colección Alchemy of Meaning (Alquimia del Significado).
 © 2026 Héctor Cruz Juárez · https://hectorcruz.com.mx
@@ -152,3 +152,8 @@ EL CLARO DE LAS SEMILLAS (v4.5)
   · ?s=CÓDIGO&t=MINUTO  entrada desde Xinas: bienvenida propia, sin tirada (el hexagrama viene
                   en la semilla), y aparece junto a su planta, marcada con un haz de luz.
   · Sin PHP (GitHub Pages) el bosque funciona igual y muestra solo la semilla del enlace.
+
+APP EN LA PANTALLA DE INICIO (v4.6)
+  En Safari: Compartir › «Agregar a inicio». Abre a pantalla completa con su ícono y su carátula
+  de arranque, y sin conexión una vez abierta (sw.js guarda la página y three.js; semillas.php
+  siempre va a la red). Suben juntos: index.html, manifest.webmanifest, sw.js, iconos/ y lib/.

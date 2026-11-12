@@ -10,7 +10,16 @@ datos = '<script>\n' + leer('fuente', 'iching-es.js') + '\n</script>\n<script>\n
 s = s.replace('<!--DATOS-->', datos)
 s = s.replace('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>', '<script src="lib/three.min.js"></script>')
 cab = '<!doctype html>\n<html lang="es">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
+# app instalable: ícono, carátulas de arranque para iPhone y manifiesto
+CARAS = [(1320, 2868, 440, 956, 3), (1290, 2796, 430, 932, 3), (1206, 2622, 402, 874, 3), (1179, 2556, 393, 852, 3), (1284, 2778, 428, 926, 3), (1170, 2532, 390, 844, 3), (1125, 2436, 375, 812, 3), (1242, 2688, 414, 896, 3), (828, 1792, 414, 896, 2), (750, 1334, 375, 667, 2), (1080, 2340, 360, 780, 3)]
+pwa = ('<meta name="theme-color" content="#141414">\n<meta name="apple-mobile-web-app-capable" content="yes">\n'
+       '<meta name="mobile-web-app-capable" content="yes">\n<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">\n'
+       '<meta name="apple-mobile-web-app-title" content="Endeles">\n<link rel="manifest" href="manifest.webmanifest">\n'
+       '<link rel="icon" type="image/png" sizes="32x32" href="iconos/favicon-32.png">\n<link rel="apple-touch-icon" href="iconos/apple-touch-icon.png">\n'
+       + ''.join(f'<link rel="apple-touch-startup-image" media="(device-width: {dw}px) and (device-height: {dh}px) and (-webkit-device-pixel-ratio: {r}) and (orientation: portrait)" href="iconos/caratula-{w}x{h}.png">\n' for w, h, dw, dh, r in CARAS))
+cab += pwa
 i = s.find('<canvas id="gl">')
-s = cab + s[:i].replace('<meta name="claude:viewport-fit-sides" content="cover">\n', '') + '</head>\n<body>\n' + s[i:] + '\n</body>\n</html>\n'
+sw = "<script>if('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(function(){});</script>"
+s = cab + s[:i].replace('<meta name="claude:viewport-fit-sides" content="cover">\n', '') + '</head>\n<body>\n' + s[i:] + '\n' + sw + '\n</body>\n</html>\n'
 open(os.path.join(raiz, 'index.html'), 'w', encoding='utf-8').write(s)
 print('index.html listo:', len(s), 'bytes')
