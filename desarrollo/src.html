@@ -1,7 +1,7 @@
 <title>Endeles</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <!--
-  Endeles v4.7 · bosque espectral para escuchar caminando.
+  Endeles v4.8 · bosque espectral para escuchar caminando.
   Diseño, investigación y desarrollo: Héctor Cruz Juárez — https://hectorcruz.com.mx
   Colección Alchemy of Meaning.
   Software libre bajo licencia GPL-3.0-or-later. Usa three.js (MIT).
@@ -141,6 +141,7 @@ body.sinui .bar,body.sinui #col,body.sinui #map,body.sinui #info,body.sinui #hin
 .ulect p b{display:block;font-weight:normal;color:var(--dim);font-size:9px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px}
 @media (max-width:620px){.ucol{grid-template-columns:1fr 1fr}.ucast{gap:30px}.hx.big{width:84px;gap:7px}.hx.big i{height:10px;gap:12px}.ubox>.in{padding:16px}.uh{font-size:19px}.ubox{max-height:calc(100% - 16px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}#start{padding-left:8px;padding-right:8px}}
 #big{display:block;width:100%;aspect-ratio:1/1;max-width:100%;background:#000;cursor:crosshair;touch-action:none}
+#bSem{color:#9fe6c8!important}
 #joy{position:fixed;z-index:7;width:96px;height:96px;margin:-48px 0 0 -48px;border:1px solid rgba(255,255,255,.6);border-radius:50%;pointer-events:none}
 #joy i{position:absolute;left:50%;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;background:rgba(255,255,255,.75);border-radius:50%}
 @media (max-width:620px){
@@ -189,6 +190,7 @@ body.sinui .bar,body.sinui #col,body.sinui #map,body.sinui #info,body.sinui #hin
   <button data-w="wMapa" id="tMapa">mapa</button>
   <button data-w="wRec" id="tRec">recorridos</button>
   <button data-w="wPistas" id="tPistas">pistas</button>
+  <button id="bSem" hidden title="ir a tu semilla">✦ tu semilla</button>
   <button id="bHide">ocultar</button>
   <button id="bUmbral3" class="solomovil">volver al umbral</button>
 </nav>
@@ -343,7 +345,7 @@ body.sinui .bar,body.sinui #col,body.sinui #map,body.sinui #info,body.sinui #hin
 </div>
 <div id="start" class="ov">
   <div class="win ubox" id="uBox" style="--pc:#b58cff">
-    <h3>Endeles <span>v4.7</span></h3>
+    <h3>Endeles <span>v4.8</span></h3>
     <nav class="usteps" id="uSteps"><button data-u="0" class="on">1 · bosque</button><button data-u="1">2 · datos</button><button data-u="2">3 · pregunta</button><button data-u="3">4 · tirada</button></nav>
     <div class="in" id="uIn">
       <section data-p="0">
@@ -430,7 +432,7 @@ body.sinui .bar,body.sinui #col,body.sinui #map,body.sinui #info,body.sinui #hin
 
 <div id="about" class="ov" hidden>
   <div class="win box">
-    <h3>Acerca de <span>Endeles v4.7</span></h3>
+    <h3>Acerca de <span>Endeles v4.8</span></h3>
     <div class="in">
       <p>Endeles es un bosque sin hojas hecho de tinta, niebla y grano. Se recorre a pie y se escucha: cada espacio sonoro tiene un radio donde suena completo y un alcance donde se pierde. El clima se modula como una partitura de estados, o se toma del cielo real de un lugar.</p>
       <p>Diseño, investigación y desarrollo: Héctor Cruz Juárez — <a href="https://hectorcruz.com.mx" target="_blank" rel="noopener" style="color:inherit">https://hectorcruz.com.mx</a><br>Colección Alchemy of Meaning.</p>
@@ -1505,12 +1507,13 @@ function drawMapTo(cx,S,big){
     if(r.pts2d){cx.beginPath();r.pts2d.forEach((p,i)=>{const[x,y]=toM(p[0],p[1]);i?cx.lineTo(x,y):cx.moveTo(x,y);});cx.stroke();}
     if(big||on)r.puntos.forEach((p,i)=>{const[x,y]=toM(p.x,p.z);cx.fillStyle=on?'#fff':'#aaa';cx.fillRect(x-2*lw,y-2*lw,4*lw,4*lw);if(big&&on){cx.font=(9*lw)+'px Arial';cx.fillText(i+1,x+4*lw,y-4*lw);}});});
   SRCS.forEach(s=>{if(!s.pista)return;const[x,y]=toM(s.gx??s.x,s.gz??s.z),r=3.2*lw,hall=hallada(s.pista);cx.save();cx.translate(x,y);cx.rotate(Math.PI/4);cx.fillStyle=PISTAS[s.pista].col;cx.strokeStyle=PISTAS[s.pista].col;cx.lineWidth=1.2*lw;if(hall)cx.strokeRect(-r,-r,2*r,2*r);else cx.fillRect(-r,-r,2*r,2*r);cx.restore();});
+  if(window.__semMapa)window.__semMapa(cx,toM,lw,big,K);
   const[px,py]=toM(pos.x,pos.z);cx.save();cx.translate(px,py);cx.rotate(-yaw);cx.scale(lw,lw);
   cx.fillStyle='rgba(255,255,255,.2)';cx.beginPath();cx.moveTo(0,0);cx.arc(0,0,26,-Math.PI/2-.55,-Math.PI/2+.55);cx.closePath();cx.fill();
   cx.fillStyle='#fff';cx.beginPath();cx.moveTo(0,-6);cx.lineTo(4,4);cx.lineTo(-4,4);cx.closePath();cx.fill();cx.restore();
 }
 const map=$('map'),mx=map.getContext('2d'),big=$('big'),bx=big.getContext('2d');
-map.addEventListener('pointerdown',e=>{const r=map.getBoundingClientRect();stopRoute();[pos.x,pos.z]=lugarGema({x:(e.clientX-r.left)/r.width*WORLD-HALF,z:(e.clientY-r.top)/r.height*WORLD-HALF});});
+map.addEventListener('pointerdown',e=>{const r=map.getBoundingClientRect();if(window.__semCerca&&window.__semCerca((e.clientX-r.left)/r.width*WORLD-HALF,(e.clientY-r.top)/r.height*WORLD-HALF))return;stopRoute();[pos.x,pos.z]=lugarGema({x:(e.clientX-r.left)/r.width*WORLD-HALF,z:(e.clientY-r.top)/r.height*WORLD-HALF});});
 let bigMode='ir',drag=null;
 function openBig(m){$('bigOv').hidden=false;if(m)setMode(m);}
 function setMode(m){bigMode=m;document.querySelectorAll('#bigModes [data-m]').forEach(b=>b.classList.toggle('on',b.dataset.m===m));
@@ -1520,7 +1523,7 @@ $('bBig').onclick=()=>openBig('ir');$('bigX').onclick=()=>{$('bigOv').hidden=tru
 const bigXY=e=>{const r=big.getBoundingClientRect();return[(e.clientX-r.left)/r.width*WORLD-HALF,(e.clientY-r.top)/r.height*WORLD-HALF];};
 big.addEventListener('pointerdown',e=>{
   const[x,z]=bigXY(e);
-  if(bigMode==='ir'){stopRoute();[pos.x,pos.z]=lugarGema({x,z});}
+  if(bigMode==='ir'){if(window.__semCerca&&window.__semCerca(x,z)){$('bigOv').hidden=true;return;}stopRoute();[pos.x,pos.z]=lugarGema({x,z});}
   else if(bigMode==='espacio'){const s=addSource({nombre:'Espacio '+(SRCS.length+1),x:+x.toFixed(1),z:+z.toFixed(1),radio:5,alcance:40,volumen:.9,sintesis:'campanas'});selId=s.id;renderList();}
   else if(bigMode==='punto'){let r=curR();if(!r){r=newRoute();selRoute=r.id;}const prev=r.puntos[r.puntos.length-1];const yw=prev?Math.atan2(-(x-prev.x),-(z-prev.z)):yaw;
     if(prev&&r.puntos.length===1)prev.yaw=+yw.toFixed(3);addPoint(r,x,z,1.65,yw,-.04);renderRoutes();}
@@ -1663,6 +1666,7 @@ function sembrarLista(lista){
     const top=Math.max(.3,P.plantBox(pl,1,0).y1),alto=1.5+h0*.9;
     SEM.push({s:x.s,t:x.t,x:px,z:pz,pl,esc:alto/top,edad:P.ageFromDays(x.t==null?0:Math.max(0,(ahora-x.t)/1440)),hex:P.hexagram(pl.f)});});
   const yo=XQ?XQ.s:(MIAS.length?MIAS[MIAS.length-1].s:null);miSem=yo?SEM.find(e=>e.s===yo)||null:null;
+  if($('bSem'))$('bSem').hidden=!miSem;
   hornear();
 }
 function cargarSemillas(){
@@ -1693,6 +1697,18 @@ function llegadaXinas(){
   $('start').hidden=true;$('xinasOv').hidden=false;
   const e=miSem;if(e)dibujarMia($('xDib'),e);if(e){const Hx=IC.hex[e.hex.n];$('xHex').innerHTML=hexHTML(e.hex.n)+`<div><b>${e.hex.n} · ${Hx?Hx.n:''}</b><br><span class="note">${Hx?Hx.k:''}</span></div>`;}
 }
+/* en el mapa: el claro, cada semilla con su color y la tuya con un anillo; tocarla te lleva a ella */
+window.__semMapa=(cx,toM,lw,big,K)=>{
+  if(!SEM.length)return;const[cxm,cym]=toM(CLARO.x,CLARO.z);cx.save();
+  cx.strokeStyle='rgba(159,230,200,.45)';cx.lineWidth=lw;cx.setLineDash([2*lw,3*lw]);cx.beginPath();cx.arc(cxm,cym,CLARO.r*K,0,7);cx.stroke();cx.setLineDash([]);
+  const P=window.Planta;
+  for(const e of SEM){const[x,y]=toM(e.x,e.z),c=P.paletteRGB(P.palette(P.decode(e.s)),.3).map(v=>Math.round(v*255));cx.fillStyle=`rgb(${c})`;cx.beginPath();cx.arc(x,y,(e===miSem?2.6:1.6)*lw,0,7);cx.fill();}
+  if(miSem){const[x,y]=toM(miSem.x,miSem.z),t=performance.now()/1000,r=(5+Math.sin(t*3)*1.5)*lw;cx.strokeStyle='#9fe6c8';cx.lineWidth=1.4*lw;cx.beginPath();cx.arc(x,y,r,0,7);cx.stroke();
+    if(big){cx.fillStyle='#9fe6c8';cx.font=(10*lw)+'px Arial';cx.fillText('tu semilla',x+r+3*lw,y+3*lw);}}
+  else if(big){cx.fillStyle='rgba(159,230,200,.85)';cx.font=(10*lw)+'px Arial';cx.fillText('claro de las semillas',cxm+CLARO.r*K+3*lw,cym);}
+  cx.restore();
+};
+window.__semCerca=(x,z)=>{if(!miSem||Math.hypot(x-miSem.x,z-miSem.z)>9)return false;irAMiPlanta();return true;};
 function irAMiPlanta(){
   if(!miSem){avisar('aún no has sembrado ninguna semilla desde este teléfono',4000);return;}
   if(!$('start').hidden||!$('xinasOv').hidden){$('xinasOv').hidden=true;$('start').hidden=true;entrar(null);}
@@ -1820,7 +1836,7 @@ syncMapUI();buildWorld();eyeY=H(pos.x,pos.z)+1.65;
 setQuality('auto');renderPistas();renderList();renderRoutes();$('tJson').value=exportJSON();syncUI();
 if(CUA.some(c=>c.tipo==='tirada'&&c.dia===dia()))irPaso(3);
 mirarGema();
-$('xEntrar').onclick=entrarAlClaro;$('uMia').onclick=irAMiPlanta;$('bMia').onclick=irAMiPlanta;$('xTirada').onclick=()=>{$('xinasOv').hidden=true;$('start').hidden=false;irPaso(0);};
+$('xEntrar').onclick=entrarAlClaro;$('uMia').onclick=irAMiPlanta;$('bSem').onclick=irAMiPlanta;$('bMia').onclick=irAMiPlanta;$('xTirada').onclick=()=>{$('xinasOv').hidden=true;$('start').hidden=false;irPaso(0);};
 if(XQ)$('start').hidden=true;
 cargarSemillas().then(()=>{if(XQ)llegadaXinas();});
 requestAnimationFrame(frame);

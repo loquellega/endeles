@@ -1,6 +1,6 @@
 /* Endeles · service worker: el bosque abre sin conexión con la copia guardada.
    El semillero (semillas.php) siempre va a la red: la lista de plantas tiene que estar al día. */
-const CACHE = 'endeles-v4.7';
+const CACHE = 'endeles-v4.8';
 const FILES = ['./', './index.html', './manifest.webmanifest', './lib/three.min.js', './iconos/apple-touch-icon.png', './iconos/icono-192.png', './iconos/icono-512.png', './iconos/favicon-32.png'];
 
 self.addEventListener('install', e => {
