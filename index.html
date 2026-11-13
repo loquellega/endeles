@@ -24,7 +24,7 @@
 <link rel="apple-touch-startup-image" media="(device-width: 360px) and (device-height: 780px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="iconos/caratula-1080x2340.png">
 <title>Endeles</title>
 <!--
-  Endeles v4.8 · bosque espectral para escuchar caminando.
+  Endeles v4.9 · bosque espectral para escuchar caminando.
   Diseño, investigación y desarrollo: Héctor Cruz Juárez — https://hectorcruz.com.mx
   Colección Alchemy of Meaning.
   Software libre bajo licencia GPL-3.0-or-later. Usa three.js (MIT).
@@ -35,9 +35,9 @@
 /* layout: lienzo a pantalla completa; ventanas de la colección en una columna a la izquierda; mapa e info abajo a la derecha */
 [hidden]{display:none!important}
 :root{--bg:#000;--fg:#fff;--dim:#8a8a8a;--rule:#fff;--panel:rgba(0,0,0,.84);--ink:#000;color-scheme:dark}
-html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);overflow:hidden;font:11px Arial,Helvetica,sans-serif;-webkit-user-select:none;user-select:none}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);overflow:hidden;font:11px Inter,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Inter,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;-webkit-user-select:none;user-select:none}
 #gl{position:fixed;inset:0;display:block;width:100%;height:100%;touch-action:none;cursor:grab}
-button{background:var(--bg);color:var(--fg);border:1px solid var(--rule);font:11px Arial,Helvetica,sans-serif;padding:4px 8px;cursor:pointer;border-radius:0;touch-action:manipulation}
+button{background:var(--bg);color:var(--fg);border:1px solid var(--rule);font:11px Inter,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Inter,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;padding:4px 8px;cursor:pointer;border-radius:0;touch-action:manipulation}
 button.on,button:active{background:var(--fg);color:var(--ink)}
 button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:1px dashed var(--fg);outline-offset:2px}
 .bar{position:fixed;left:0;top:0;z-index:6;display:flex;flex-wrap:wrap;gap:4px;padding-top:calc(8px + env(safe-area-inset-top,0px));padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:8px;max-width:calc(100% - 16px)}
@@ -45,9 +45,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 #bShow{position:fixed;z-index:6;left:max(8px,env(safe-area-inset-left,0px));top:calc(8px + env(safe-area-inset-top,0px));opacity:.35}
 #col{position:fixed;z-index:5;left:max(8px,env(safe-area-inset-left,0px));top:calc(40px + env(safe-area-inset-top,0px));width:262px;max-height:calc(100% - 64px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow:auto;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin}
 .win{border:1px solid var(--rule);background:var(--panel)}
-.win>h3{margin:0;background:var(--fg);color:var(--ink);font:bold 11px Arial,Helvetica,sans-serif;padding:3px 6px;display:flex;justify-content:space-between;gap:8px}
+.win>h3{margin:0;background:var(--fg);color:var(--ink);font:bold 11px Inter,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Inter,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;padding:3px 6px;display:flex;justify-content:space-between;gap:8px}
 .win>h3 span{font-weight:normal}
-.win>h3 .wx{margin-left:auto;border:0;background:transparent;color:var(--ink);padding:0 2px 0 8px;font:bold 13px Arial,sans-serif;line-height:1}
+.win>h3 .wx{margin-left:auto;border:0;background:transparent;color:var(--ink);padding:0 2px 0 8px;font:bold 13px Inter,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;line-height:1}
 .win>h3 .wx+span,.win>h3 span+.wx{margin-left:8px}
 .solomovil{display:none}
 #joyBase{position:fixed;z-index:3;left:calc(30px + env(safe-area-inset-left,0px));bottom:calc(30px + env(safe-area-inset-bottom,0px));width:96px;height:96px;border:1px solid rgba(255,255,255,.35);border-radius:50%;pointer-events:none}
@@ -71,7 +71,7 @@ input[type=range]::-webkit-slider-runnable-track{height:1px;background:var(--rul
 input[type=range]::-moz-range-track{height:1px;background:var(--rule)}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:9px;height:9px;background:var(--fg);border:none;margin-top:-4px}
 input[type=range]::-moz-range-thumb{width:9px;height:9px;background:var(--fg);border:none;border-radius:0}
-input[type=text],input[type=number],select,textarea{background:var(--bg);color:var(--fg);border:1px solid #555;font:11px Arial,Helvetica,sans-serif;padding:3px 4px;border-radius:0;min-width:0;width:100%;box-sizing:border-box}
+input[type=text],input[type=number],select,textarea{background:var(--bg);color:var(--fg);border:1px solid #555;font:11px Inter,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Inter,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;padding:3px 4px;border-radius:0;min-width:0;width:100%;box-sizing:border-box}
 input[type=text],input[type=number],textarea{-webkit-user-select:text;user-select:text}
 textarea{height:90px;resize:vertical;font-family:"Courier New",monospace;font-size:10px}
 .lf{display:grid;grid-template-columns:1fr auto;gap:4px}
@@ -107,9 +107,9 @@ body.sinui .bar,body.sinui #col,body.sinui #map,body.sinui #info,body.sinui #hin
 .hx i.y::after{display:none}
 .hx i.on::before,.hx i.on::after{background:var(--pc)}
 .hx i.ch::before,.hx i.ch::after{background:var(--pc)}
-.hx i b{position:absolute;right:-17px;top:-4px;font:bold 11px Arial,sans-serif;color:var(--pc)}
+.hx i b{position:absolute;right:-17px;top:-4px;font:bold 11px Inter,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;color:var(--pc)}
 .hxn{display:grid;gap:3px;min-width:0}
-.hxn .num{font:11px Arial,sans-serif;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+.hxn .num{font:11px Inter,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
 .hxn .zh{font-size:30px;line-height:1.1;font-family:"Noto Serif SC","Songti SC","SimSun",serif}
 .hxn .es{font-size:16px;line-height:1.25}
 .hxn .tri{color:var(--dim);font-size:11px}
@@ -153,7 +153,7 @@ body.sinui .bar,body.sinui #col,body.sinui #map,body.sinui #info,body.sinui #hin
 .ucol .pit{grid-template-columns:12px 1fr}
 .ubtn{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding-top:4px}
 .ubtn .on{padding:7px 14px}
-#uPreg{height:84px;font:13px Arial,Helvetica,sans-serif;line-height:1.45}
+#uPreg{height:84px;font:13px Inter,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Inter,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;line-height:1.45}
 .ucast{display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:center;min-height:120px}
 .hx.big{width:120px;gap:9px}
 .hx.big i{height:12px;gap:16px}
@@ -164,7 +164,14 @@ body.sinui .bar,body.sinui #col,body.sinui #map,body.sinui #info,body.sinui #hin
 .ulect p b{display:block;font-weight:normal;color:var(--dim);font-size:9px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px}
 @media (max-width:620px){.ucol{grid-template-columns:1fr 1fr}.ucast{gap:30px}.hx.big{width:84px;gap:7px}.hx.big i{height:10px;gap:12px}.ubox>.in{padding:16px}.uh{font-size:19px}.ubox{max-height:calc(100% - 16px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}#start{padding-left:8px;padding-right:8px}}
 #big{display:block;width:100%;aspect-ratio:1/1;max-width:100%;background:#000;cursor:crosshair;touch-action:none}
-#bSem{color:#9fe6c8!important}
+#bSem{color:var(--semilla,#9fe6c8)!important;border-color:var(--semilla,#9fe6c8)!important}
+/* entrada desde Xinas: el mismo lenguaje del rito (versos en minúscula, botón grande, acento del color de tu planta) */
+#xinasOv .uh{font-weight:300;text-transform:none;letter-spacing:.01em}
+#xinasOv .in p{line-height:1.55}
+#xinasOv .ubtn .grande{min-height:46px;padding:0 24px;border-radius:24px;border:1px solid var(--semilla,#9fe6c8);background:var(--semilla-bg,rgba(159,230,200,.14));color:#fff;font-size:14px;letter-spacing:.03em}
+#xinasOv .ubtn .liga{border:0;background:none;text-decoration:underline;text-underline-offset:4px;color:var(--dim)}
+#xinasOv .lec{font-size:12px;color:var(--dim);border-left:2px solid var(--semilla,#9fe6c8);padding-left:10px}
+#xinasOv .lec span{display:block;font-size:10px;letter-spacing:.06em;margin-top:3px;color:var(--semilla,#9fe6c8)}
 #joy{position:fixed;z-index:7;width:96px;height:96px;margin:-48px 0 0 -48px;border:1px solid rgba(255,255,255,.6);border-radius:50%;pointer-events:none}
 #joy i{position:absolute;left:50%;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;background:rgba(255,255,255,.75);border-radius:50%}
 @media (max-width:620px){
@@ -356,21 +363,22 @@ body.sinui .bar,body.sinui #col,body.sinui #map,body.sinui #info,body.sinui #hin
   <div class="win ubox" style="--pc:#9fe6c8">
     <h3>Endeles <span>· el claro de las semillas</span></h3>
     <div class="in">
-      <h4 class="uh">Tu semilla ya está en la tierra.</h4>
+      <h4 class="uh">tu semilla ya está en la tierra.</h4>
       <p>Endeles es un bosque espectral para escuchar caminando: árboles sin hojas, tinta, niebla y grano de película.</p>
       <p>En un claro del bosque crecen las semillas de <b>Xinas</b>. Cada una es el instante de alguien —un retrato, un minuto, un lugar— sembrado para siempre.</p>
       <p>Aquí no hace falta volver a tirar: tu planta guarda el hexagrama de su instante.</p>
       <canvas id="xDib" width="240" height="240" style="display:block;width:120px;height:120px;margin:6px auto;border-radius:8px"></canvas>
       <div class="ucast" id="xHex"></div>
+      <p class="lec">lo que nace en un momento lleva la cualidad de ese momento. el hexagrama no predice: retrata el instante.<span>a partir de Carl Gustav Jung, <i>prólogo al I Ching de Richard Wilhelm</i></span></p>
       <p>Crecerá un poco cada día, aunque la tira ya no exista. Camina hacia la luz.</p>
       <p class="note">Mejor con audífonos. En iPhone quita el modo silencio para oír el bosque.</p>
-      <div class="ubtn"><button class="on" id="xEntrar">entrar al bosque</button><button id="xTirada">hacer también mi tirada</button></div>
+      <div class="ubtn"><button class="grande" id="xEntrar">entrar al bosque</button><button class="liga" id="xTirada">hacer también mi tirada</button></div>
     </div>
   </div>
 </div>
 <div id="start" class="ov">
   <div class="win ubox" id="uBox" style="--pc:#b58cff">
-    <h3>Endeles <span>v4.8</span></h3>
+    <h3>Endeles <span>v4.9</span></h3>
     <nav class="usteps" id="uSteps"><button data-u="0" class="on">1 · bosque</button><button data-u="1">2 · datos</button><button data-u="2">3 · pregunta</button><button data-u="3">4 · tirada</button></nav>
     <div class="in" id="uIn">
       <section data-p="0">
@@ -457,7 +465,7 @@ body.sinui .bar,body.sinui #col,body.sinui #map,body.sinui #info,body.sinui #hin
 
 <div id="about" class="ov" hidden>
   <div class="win box">
-    <h3>Acerca de <span>Endeles v4.8</span></h3>
+    <h3>Acerca de <span>Endeles v4.9</span></h3>
     <div class="in">
       <p>Endeles es un bosque sin hojas hecho de tinta, niebla y grano. Se recorre a pie y se escucha: cada espacio sonoro tiene un radio donde suena completo y un alcance donde se pierde. El clima se modula como una partitura de estados, o se toma del cielo real de un lugar.</p>
       <p>Diseño, investigación y desarrollo: Héctor Cruz Juárez — <a href="https://hectorcruz.com.mx" target="_blank" rel="noopener" style="color:inherit">https://hectorcruz.com.mx</a><br>Colección Alchemy of Meaning.</p>
@@ -1863,11 +1871,11 @@ function drawMapTo(cx,S,big){
   cx.clearRect(0,0,S,S);cx.drawImage(mapBase,0,0,S,S);const lw=S/280;
   SRCS.forEach(s=>{const[x,y]=toM(s.x,s.z),on=s.id===selId;cx.strokeStyle=on?'#fff':'rgba(255,255,255,.75)';cx.lineWidth=(on?2:1)*lw;
     cx.setLineDash([]);cx.beginPath();cx.arc(x,y,s.radio*K,0,7);cx.stroke();cx.setLineDash([2*lw,3*lw]);cx.beginPath();cx.arc(x,y,s.alcance*K,0,7);cx.stroke();
-    if(big){cx.setLineDash([]);cx.fillStyle='#fff';cx.font=(10*lw)+'px Arial';cx.fillText(s.nombre,x+s.radio*K+3*lw,y+3*lw);}});
+    if(big){cx.setLineDash([]);cx.fillStyle='#fff';cx.font=(10*lw)+'px Inter,-apple-system,Helvetica,Arial';cx.fillText(s.nombre,x+s.radio*K+3*lw,y+3*lw);}});
   cx.setLineDash([]);
   ROUTES.forEach(r=>{if(!r.curve&&!r.puntos.length)return;const on=r.id===selRoute;cx.strokeStyle=on?'#fff':'rgba(255,255,255,.5)';cx.lineWidth=(on?2:1)*lw;
     if(r.pts2d){cx.beginPath();r.pts2d.forEach((p,i)=>{const[x,y]=toM(p[0],p[1]);i?cx.lineTo(x,y):cx.moveTo(x,y);});cx.stroke();}
-    if(big||on)r.puntos.forEach((p,i)=>{const[x,y]=toM(p.x,p.z);cx.fillStyle=on?'#fff':'#aaa';cx.fillRect(x-2*lw,y-2*lw,4*lw,4*lw);if(big&&on){cx.font=(9*lw)+'px Arial';cx.fillText(i+1,x+4*lw,y-4*lw);}});});
+    if(big||on)r.puntos.forEach((p,i)=>{const[x,y]=toM(p.x,p.z);cx.fillStyle=on?'#fff':'#aaa';cx.fillRect(x-2*lw,y-2*lw,4*lw,4*lw);if(big&&on){cx.font=(9*lw)+'px Inter,-apple-system,Helvetica,Arial';cx.fillText(i+1,x+4*lw,y-4*lw);}});});
   SRCS.forEach(s=>{if(!s.pista)return;const[x,y]=toM(s.gx??s.x,s.gz??s.z),r=3.2*lw,hall=hallada(s.pista);cx.save();cx.translate(x,y);cx.rotate(Math.PI/4);cx.fillStyle=PISTAS[s.pista].col;cx.strokeStyle=PISTAS[s.pista].col;cx.lineWidth=1.2*lw;if(hall)cx.strokeRect(-r,-r,2*r,2*r);else cx.fillRect(-r,-r,2*r,2*r);cx.restore();});
   if(window.__semMapa)window.__semMapa(cx,toM,lw,big,K);
   const[px,py]=toM(pos.x,pos.z);cx.save();cx.translate(px,py);cx.rotate(-yaw);cx.scale(lw,lw);
@@ -1998,9 +2006,9 @@ function hornear(){
     const vert=(q,n,k,h)=>{pos.push(q[0],q[1],q[2]);nor.push(n[0],n[1],n[2]);aP.push(d[0],d[1],d[2],span);aQ.push(k,h);return v++;};
     for(const g of pl.segs){if(g.t0>=ag)continue;const fr=Math.min(1,(ag-g.t0)/(g.t1-g.t0));
       const a=g.a,b=[a[0]+(g.b[0]-a[0])*fr,a[1]+(g.b[1]-a[1])*fr,a[2]+(g.b[2]-a[2])*fr],dir=V.norm([b[0]-a[0],b[1]-a[1],b[2]-a[2]]);
-      const u=V.perp(dir),w=V.cross(dir,u),r=Math.max(.016,.045*Math.pow(.66,g.d))/s;const base=v;
-      for(const [p0,hh] of [[a,a[1]/top],[b,b[1]/top]])for(let i=0;i<4;i++){const an=i*Math.PI/2,n=V.add(V.mul(u,Math.cos(an)),V.mul(w,Math.sin(an)));vert(W(V.add(p0,V.mul(n,r))),n,0,hh);}
-      for(let i=0;i<4;i++){const j=(i+1)%4;idx.push(base+i,base+j,base+4+i,base+j,base+4+j,base+4+i);}}
+      const u=V.perp(dir),w=V.cross(dir,u),r=Math.max(.012,.032*Math.pow(.66,g.d))/s;const base=v;
+      for(const [p0,hh] of [[a,a[1]/top],[b,b[1]/top]])for(let i=0;i<6;i++){const an=i*Math.PI/3,n=V.add(V.mul(u,Math.cos(an)),V.mul(w,Math.sin(an)));vert(W(V.add(p0,V.mul(n,r))),n,0,hh);}
+      for(let i=0;i<6;i++){const j=(i+1)%6;idx.push(base+i,base+j,base+6+i,base+j,base+6+j,base+6+i);}}
     const hoja=(p,dir,len,k)=>{const side=V.perp(dir),n=V.cross(dir,side),m=V.add(p,V.mul(dir,len*.5)),hh=p[1]/top;
       const b0=vert(W(p),n,1,hh),b1=vert(W(V.add(m,V.mul(side,len*.17))),n,1,hh),b2=vert(W(V.add(p,V.mul(dir,len))),n,1,hh),b3=vert(W(V.add(m,V.mul(side,-len*.17))),n,1,hh);idx.push(b0,b1,b2,b0,b2,b3);};
     for(const l of pl.leaves){if(l.t>=ag)continue;hoja(l.p,l.d,l.s*Math.min(1,(ag-l.t)/.08));}
@@ -2029,6 +2037,8 @@ function sembrarLista(lista){
     SEM.push({s:x.s,t:x.t,x:px,z:pz,pl,esc:alto/top,edad:P.ageFromDays(x.t==null?0:Math.max(0,(ahora-x.t)/1440)),hex:P.hexagram(pl.f)});});
   const yo=XQ?XQ.s:(MIAS.length?MIAS[MIAS.length-1].s:null);miSem=yo?SEM.find(e=>e.s===yo)||null:null;
   if($('bSem'))$('bSem').hidden=!miSem;
+  if(miSem){const P=window.Planta;let c=P.paletteRGB(P.palette(P.decode(miSem.s)),.3);const mx=Math.max(...c,.01);c=c.map(v=>Math.round(Math.min(1,v*.92/mx)*255));
+    window.__semCol=`rgb(${c})`;const st=document.documentElement.style;st.setProperty('--semilla',window.__semCol);st.setProperty('--semilla-bg',`rgba(${c},.18)`);}
   hornear();
 }
 function cargarSemillas(){
@@ -2065,25 +2075,33 @@ window.__semMapa=(cx,toM,lw,big,K)=>{
   cx.strokeStyle='rgba(159,230,200,.45)';cx.lineWidth=lw;cx.setLineDash([2*lw,3*lw]);cx.beginPath();cx.arc(cxm,cym,CLARO.r*K,0,7);cx.stroke();cx.setLineDash([]);
   const P=window.Planta;
   for(const e of SEM){const[x,y]=toM(e.x,e.z),c=P.paletteRGB(P.palette(P.decode(e.s)),.3).map(v=>Math.round(v*255));cx.fillStyle=`rgb(${c})`;cx.beginPath();cx.arc(x,y,(e===miSem?2.6:1.6)*lw,0,7);cx.fill();}
-  if(miSem){const[x,y]=toM(miSem.x,miSem.z),t=performance.now()/1000,r=(5+Math.sin(t*3)*1.5)*lw;cx.strokeStyle='#9fe6c8';cx.lineWidth=1.4*lw;cx.beginPath();cx.arc(x,y,r,0,7);cx.stroke();
-    if(big){cx.fillStyle='#9fe6c8';cx.font=(10*lw)+'px Arial';cx.fillText('tu semilla',x+r+3*lw,y+3*lw);}}
-  else if(big){cx.fillStyle='rgba(159,230,200,.85)';cx.font=(10*lw)+'px Arial';cx.fillText('claro de las semillas',cxm+CLARO.r*K+3*lw,cym);}
+  if(miSem){const[x,y]=toM(miSem.x,miSem.z),t=performance.now()/1000,r=(5+Math.sin(t*3)*1.5)*lw;cx.strokeStyle=window.__semCol||'#9fe6c8';cx.lineWidth=1.4*lw;cx.beginPath();cx.arc(x,y,r,0,7);cx.stroke();
+    if(big){cx.fillStyle=window.__semCol||'#9fe6c8';cx.font=(10*lw)+'px Inter,-apple-system,Helvetica,Arial';cx.fillText('tu semilla',x+r+3*lw,y+3*lw);}}
+  else if(big){cx.fillStyle='rgba(159,230,200,.85)';cx.font=(10*lw)+'px Inter,-apple-system,Helvetica,Arial';cx.fillText('claro de las semillas',cxm+CLARO.r*K+3*lw,cym);}
   cx.restore();
 };
 window.__semCerca=(x,z)=>{if(!miSem||Math.hypot(x-miSem.x,z-miSem.z)>9)return false;irAMiPlanta();return true;};
+/* desde dónde mirar tu planta: a 4–7 m, en el punto más despejado de las otras plantas y caminable */
+function miradorDe(e){
+  let mejor=null,mv=-1;
+  for(let r=4.5;r<=7.5;r+=1.5)for(let i=0;i<24;i++){const a=i/24*Math.PI*2,x=e.x+Math.cos(a)*r,z=e.z+Math.sin(a)*r;if(!caminable(x,z))continue;
+    let md=99;for(const o of SEM){if(o===e)continue;md=Math.min(md,Math.hypot(o.x-x,o.z-z),distSeg(o,x,z,e));}
+    const v=Math.min(md,6)-Math.abs(r-5.5)*.15;if(v>mv){mv=v;mejor=[x,z];}}
+  return mejor||[e.x,e.z+5];
+}
+/* qué tan cerca pasa otra planta de la línea de vista entre el mirador y tu planta */
+function distSeg(o,x,z,e){const vx=e.x-x,vz=e.z-z,l2=vx*vx+vz*vz||1;let t=((o.x-x)*vx+(o.z-z)*vz)/l2;t=Math.max(0,Math.min(.85,t));return Math.hypot(o.x-(x+vx*t),o.z-(z+vz*t))+.4;}
 function irAMiPlanta(){
   if(!miSem){avisar('aún no has sembrado ninguna semilla desde este teléfono',4000);return;}
   if(!$('start').hidden||!$('xinasOv').hidden){$('xinasOv').hidden=true;$('start').hidden=true;entrar(null);}
   $('about').hidden=true;
-  const e=miSem;const dx=e.x-CLARO.x,dz=e.z-CLARO.z,dl=Math.hypot(dx,dz)||1;
-  const ux=dl>.5?dx/dl:0,uz=dl>.5?dz/dl:1;let px=e.x+ux*5,pz=e.z+uz*5;if(!caminable(px,pz)){px=e.x-ux*5;pz=e.z-uz*5;}
-  pos.set(px,0,pz);yaw=Math.atan2(-(e.x-pos.x),-(e.z-pos.z));pitch=.06;eyeY=H(pos.x,pos.z)+1.65;
+  const[px,pz]=miradorDe(miSem);
+  pos.set(px,0,pz);yaw=Math.atan2(-(miSem.x-pos.x),-(miSem.z-pos.z));pitch=.06;eyeY=H(pos.x,pos.z)+1.65;
   avisar('aquí está tu semilla: camina hacia la luz',5000);
 }
 function entrarAlClaro(){
   $('xinasOv').hidden=true;entrar(null);
-  const e=miSem||{x:CLARO.x,z:CLARO.z};const dx=e.x-CLARO.x,dz=e.z-CLARO.z,dl=Math.hypot(dx,dz)||1;
-  const ux=dl>.5?dx/dl:0,uz=dl>.5?dz/dl:1;let px=e.x+ux*5,pz=e.z+uz*5;if(!caminable(px,pz)){px=e.x-ux*5;pz=e.z-uz*5;}
+  const e=miSem||{x:CLARO.x,z:CLARO.z,s:''};const[px,pz]=miradorDe(e);
   pos.set(px,0,pz);yaw=Math.atan2(-(e.x-pos.x),-(e.z-pos.z));pitch=.06;eyeY=H(pos.x,pos.z)+1.65;
   avisar('camina hacia la luz: ahí está tu semilla',5000);
 }
