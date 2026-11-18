@@ -74,6 +74,13 @@ It is a static page: upload the folder to any web host or use GitHub Pages, and 
 | ![](docs/capturas/13-movil-bosque.png)<br>Teléfono: guía de manos · Phone: touch guide | ![](docs/capturas/14-movil-pista.png)<br>Teléfono: pista · Phone: clue | ![](docs/capturas/15-claro-semillas.png)<br>El claro de las semillas · Clearing of seeds |
 | ![](docs/capturas/16-movil-llegada-xinas.png)<br>Llegada desde Xinas · Arrival from Xinas | | |
 
+Nuevo en v5.0 / New in v5.0:
+
+| | | |
+|---|---|---|
+| ![líneas](docs/capturas/17-lineas-de-tu-semilla.png) | ![amanecer](docs/capturas/18-cierre-amanecer.png) | ![atardecer](docs/capturas/19-cierre-atardecer.png) |
+| Las seis líneas de tu semilla / The six lines of your seed | Cierre al amanecer / Closing at sunrise | Cierre al atardecer / Closing at sunset |
+
 ## Licencia / License
 
 GPL-3.0-or-later. Ver / see [LICENSE](LICENSE). three.js es MIT (`lib/three-LICENSE.txt`). Los datos de clima vienen de [Open-Meteo](https://open-meteo.com), para uso no comercial. La rueda que reparte los 64 hexagramas en el calendario sigue el orden que usa Human Design; Endeles solo usa ese orden.
