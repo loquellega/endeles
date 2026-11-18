@@ -24,7 +24,7 @@
 <link rel="apple-touch-startup-image" media="(device-width: 360px) and (device-height: 780px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="iconos/caratula-1080x2340.png">
 <title>Endeles</title>
 <!--
-  Endeles v4.9 · bosque espectral para escuchar caminando.
+  Endeles v5.0 · bosque espectral para escuchar caminando.
   Diseño, investigación y desarrollo: Héctor Cruz Juárez — https://hectorcruz.com.mx
   Colección Alchemy of Meaning.
   Software libre bajo licencia GPL-3.0-or-later. Usa three.js (MIT).
@@ -95,8 +95,8 @@ body.sinui #mision{display:none}
 body.sinui .bar,body.sinui #col,body.sinui #map,body.sinui #info,body.sinui #hint{display:none}
 .ov{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:rgba(0,0,0,.35);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .box{width:min(380px,100%)}
-#bPista{position:fixed;z-index:8;left:50%;transform:translateX(-50%);bottom:calc(64px + env(safe-area-inset-bottom,0px));padding:8px 14px;font-size:12px;letter-spacing:.04em;border-width:1px;box-shadow:0 0 18px var(--pc,#fff)}
-#bPista:hover{background:var(--fg);color:var(--ink)}
+#bPista,#bLinea{position:fixed;z-index:8;left:50%;transform:translateX(-50%);bottom:calc(64px + env(safe-area-inset-bottom,0px));padding:8px 14px;font-size:12px;letter-spacing:.04em;border-width:1px;box-shadow:0 0 18px var(--pc,#fff)}
+#bPista:hover,#bLinea:hover{background:var(--fg);color:var(--ink)}
 .pbox{background:var(--bg);width:min(460px,100%);max-height:calc(100% - 40px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));display:flex;flex-direction:column}
 .pbox>h3{border-bottom:3px solid var(--pc,#fff)}
 .pbox .in{overflow:auto;gap:12px;padding:14px}
@@ -171,6 +171,23 @@ body.sinui .bar,body.sinui #col,body.sinui #map,body.sinui #info,body.sinui #hin
 #xinasOv .ubtn .grande{min-height:46px;padding:0 24px;border-radius:24px;border:1px solid var(--semilla,#9fe6c8);background:var(--semilla-bg,rgba(159,230,200,.14));color:#fff;font-size:14px;letter-spacing:.03em}
 #xinasOv .ubtn .liga{border:0;background:none;text-decoration:underline;text-underline-offset:4px;color:var(--dim)}
 #xinasOv .lec{font-size:12px;color:var(--dim);border-left:2px solid var(--semilla,#9fe6c8);padding-left:10px}
+#xinasOv .ubtn .grande.dos{background:none}
+#xinasOv textarea{width:100%;min-height:64px;background:rgba(255,255,255,.04);border:1px solid var(--semilla,#9fe6c8);color:#fff;font:inherit;font-size:14px;padding:10px;border-radius:6px;resize:vertical}
+#cierre{position:fixed;inset:0;z-index:9;pointer-events:none;background:radial-gradient(ellipse 70% 45% at 50% 50%,rgba(0,0,0,.32),rgba(0,0,0,0) 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;font-weight:300;letter-spacing:.02em}
+#cierre[hidden]{display:none}
+#cierre .ct{font-size:22px;line-height:1.4;max-width:min(520px,86vw);text-shadow:0 0 22px rgba(0,0,0,.75),0 0 3px rgba(0,0,0,.8);opacity:0;transition:opacity 1.6s ease}
+#cierre .ct.on{opacity:1}
+#cierre .resp{width:120px;height:120px;border-radius:50%;border:1.5px solid rgba(255,255,255,.95);background:rgba(255,255,255,.08);box-shadow:0 0 30px rgba(255,255,255,.25),inset 0 0 30px rgba(255,255,255,.12);margin:26px auto 0;transform:scale(.45);opacity:0;transition:opacity 1.4s ease}
+#cierre .resp.on{opacity:1}
+#cierre .sub{font-size:12px;opacity:.9;text-shadow:0 0 8px rgba(0,0,0,.8);margin-top:14px;letter-spacing:.08em}
+#cierre .fin{pointer-events:auto;background:rgba(0,0,0,.6);border:1px solid var(--semilla,#fff);border-radius:14px;padding:20px 22px;max-width:min(400px,88vw);opacity:0;transition:opacity 1.6s ease}
+#cierre .fin.on{opacity:1}
+#cierre .fin p{font-size:14px;line-height:1.55;margin:0 0 10px}
+#cierre .fin .note{font-size:12px;color:#bbb}
+#cierre .fin .flex{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px}
+#cierre .fin button{min-height:42px;padding:0 18px;border-radius:22px;border:1px solid var(--semilla,#fff);background:var(--semilla-bg,rgba(255,255,255,.08));color:#fff;font:inherit;font-size:13px}
+#cierre .saltar{position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom,0px));pointer-events:auto;background:none;border:0;color:rgba(255,255,255,.7);font:inherit;font-size:12px;text-decoration:underline;text-underline-offset:4px}
+body.encierre .bar,body.encierre #col,body.encierre #map,body.encierre #info,body.encierre #hint,body.encierre #mision,body.encierre #joyBase,body.encierre #bPista,body.encierre #bLinea,body.encierre #aviso{display:none!important}
 #xinasOv .lec span{display:block;font-size:10px;letter-spacing:.06em;margin-top:3px;color:var(--semilla,#9fe6c8)}
 #joy{position:fixed;z-index:7;width:96px;height:96px;margin:-48px 0 0 -48px;border:1px solid rgba(255,255,255,.6);border-radius:50%;pointer-events:none}
 #joy i{position:absolute;left:50%;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;background:rgba(255,255,255,.75);border-radius:50%}
@@ -199,7 +216,7 @@ body.sinui .bar,body.sinui #col,body.sinui #map,body.sinui #info,body.sinui #hin
   input[type=range]::-webkit-slider-thumb{width:22px;height:22px;margin-top:-11px;border-radius:50%}
   input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%}
   input[type=text],input[type=number],input[type=date],input[type=time],select,textarea,#uPreg{font-size:16px}
-  #bPista{bottom:calc(150px + env(safe-area-inset-bottom,0px));padding:12px 18px;font-size:14px}
+  #bPista,#bLinea{bottom:calc(150px + env(safe-area-inset-bottom,0px));padding:12px 18px;font-size:14px}
   .usteps button{min-height:0;padding:10px 4px}
 }
 @media (prefers-reduced-motion:reduce){#hint{transition:none}}
@@ -366,19 +383,27 @@ body.sinui .bar,body.sinui #col,body.sinui #map,body.sinui #info,body.sinui #hin
       <h4 class="uh">tu semilla ya está en la tierra.</h4>
       <p>Endeles es un bosque espectral para escuchar caminando: árboles sin hojas, tinta, niebla y grano de película.</p>
       <p>En un claro del bosque crecen las semillas de <b>Xinas</b>. Cada una es el instante de alguien —un retrato, un minuto, un lugar— sembrado para siempre.</p>
-      <p>Aquí no hace falta volver a tirar: tu planta guarda el hexagrama de su instante.</p>
+      <p>No lanzaste monedas: la luz que te tocó cayó sobre la tierra, y eso fue la tirada. Tu planta guarda el hexagrama de ese instante, y sus seis líneas crecen de la raíz a la flor.</p>
       <canvas id="xDib" width="240" height="240" style="display:block;width:120px;height:120px;margin:6px auto;border-radius:8px"></canvas>
       <div class="ucast" id="xHex"></div>
       <p class="lec">lo que nace en un momento lleva la cualidad de ese momento. el hexagrama no predice: retrata el instante.<span>a partir de Carl Gustav Jung, <i>prólogo al I Ching de Richard Wilhelm</i></span></p>
-      <p>Crecerá un poco cada día, aunque la tira ya no exista. Camina hacia la luz.</p>
+      <div id="xA">
+      <p>Esto es un momento: vívelo completo, ahora. Puedes solo mirar tu planta crecer, o preguntarle algo y caminar entre sus seis líneas. Al final, el bosque se abre.</p>
       <p class="note">Mejor con audífonos. En iPhone quita el modo silencio para oír el bosque.</p>
-      <div class="ubtn"><button class="grande" id="xEntrar">entrar al bosque</button><button class="liga" id="xTirada">hacer también mi tirada</button></div>
+      <div class="ubtn"><button class="grande" id="xEntrar">solo verla crecer</button><button class="grande dos" id="xPreguntar">preguntarle algo</button><button class="liga" id="xTirada">hacer también mi tirada</button></div>
+      </div>
+      <div id="xB" hidden>
+      <p>Piensa en una pregunta, o en algo que te inquieta. Si quieres, escríbela: no sale de este teléfono.</p>
+      <textarea id="xPreg" maxlength="240" placeholder="¿qué necesito ver?"></textarea>
+      <p class="note">El I Ching no predice: devuelve una imagen del momento para que la mires con calma. Seis luces rodean tu planta, una por cada línea.</p>
+      <div class="ubtn"><button class="grande" id="xCaminar">caminar hacia mi planta</button><button class="liga" id="xVolver">volver</button></div>
+      </div>
     </div>
   </div>
 </div>
 <div id="start" class="ov">
   <div class="win ubox" id="uBox" style="--pc:#b58cff">
-    <h3>Endeles <span>v4.9</span></h3>
+    <h3>Endeles <span>v5.0</span></h3>
     <nav class="usteps" id="uSteps"><button data-u="0" class="on">1 · bosque</button><button data-u="1">2 · datos</button><button data-u="2">3 · pregunta</button><button data-u="3">4 · tirada</button></nav>
     <div class="in" id="uIn">
       <section data-p="0">
@@ -424,6 +449,8 @@ body.sinui .bar,body.sinui #col,body.sinui #map,body.sinui #info,body.sinui #hin
 </div>
 
 <button id="bPista" hidden>abrir la pista</button>
+<button id="bLinea" hidden></button>
+<div id="cierre" hidden><div class="ct" id="cT"></div><div class="resp" id="cR"></div><div class="sub" id="cS"></div><div class="fin" id="cF"></div><button class="saltar" id="cSaltar">terminar</button></div>
 
 <div id="pistaOv" class="ov" hidden>
   <div class="win pbox" id="pBox">
@@ -465,7 +492,7 @@ body.sinui .bar,body.sinui #col,body.sinui #map,body.sinui #info,body.sinui #hin
 
 <div id="about" class="ov" hidden>
   <div class="win box">
-    <h3>Acerca de <span>Endeles v4.9</span></h3>
+    <h3>Acerca de <span>Endeles v5.0</span></h3>
     <div class="in">
       <p>Endeles es un bosque sin hojas hecho de tinta, niebla y grano. Se recorre a pie y se escucha: cada espacio sonoro tiene un radio donde suena completo y un alcance donde se pierde. El clima se modula como una partitura de estados, o se toma del cielo real de un lugar.</p>
       <p>Diseño, investigación y desarrollo: Héctor Cruz Juárez — <a href="https://hectorcruz.com.mx" target="_blank" rel="noopener" style="color:inherit">https://hectorcruz.com.mx</a><br>Colección Alchemy of Meaning.</p>
@@ -1117,9 +1144,9 @@ const rt=new THREE.WebGLRenderTarget(2,2,{minFilter:THREE.LinearFilter,magFilter
 rt.depthTexture=new THREE.DepthTexture();rt.depthTexture.type=THREE.UnsignedIntType;
 const post=new THREE.ShaderMaterial({
   uniforms:{tCol:{value:rt.texture},tDep:{value:rt.depthTexture},uRes:{value:new THREE.Vector2(2,2)},uN:{value:camera.near},uF:{value:camera.far},
-    uSeed:{value:0},uFilm:{value:1},uGrain:{value:.45},uCon:{value:1.2},uExp:{value:0},uVig:{value:.35},uInk:{value:.75},uFogD:{value:.02},uThick:{value:1.2},uFlash:{value:0}},
+    uSeed:{value:0},uFilm:{value:1},uGrain:{value:.45},uCon:{value:1.2},uExp:{value:0},uVig:{value:.35},uInk:{value:.75},uFogD:{value:.02},uThick:{value:1.2},uFlash:{value:0},uWarm:{value:0},uSkyLo:{value:new THREE.Color(1,.72,.48)},uSkyHi:{value:new THREE.Color(.62,.74,1)},uSun:{value:new THREE.Vector3(.5,.5,0)}},
   vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}`,
-  fragmentShader:`uniform sampler2D tCol,tDep;uniform vec2 uRes;uniform float uN,uF,uSeed,uFilm,uGrain,uCon,uExp,uVig,uInk,uFogD,uThick,uFlash;varying vec2 vUv;
+  fragmentShader:`uniform sampler2D tCol,tDep;uniform vec2 uRes;uniform float uN,uF,uSeed,uFilm,uGrain,uCon,uExp,uVig,uInk,uFogD,uThick,uFlash,uWarm;uniform vec3 uSkyLo,uSkyHi,uSun;varying vec2 vUv;
 float lin(float d){float z=d*2.-1.;return 2.*uN*uF/(uF+uN-z*(uF-uN));}
 float iv(vec2 o){return 1./lin(texture2D(tDep,vUv+o).x);}
 float h12(vec2 p){vec3 q=fract(vec3(p.xyx)*.1031);q+=dot(q,q.yzx+33.33);return fract((q.x+q.y)*q.z);}
@@ -1140,7 +1167,11 @@ void main(){
   f+=uGrain*.32*n*4.*m*(1.-m);
   float vg=1.-uVig*smoothstep(.35,.95,length((vUv-.5)*vec2(1.25,1.)))*.85;f*=vg;
   vec3 cc=(col*exp2(uExp)+uGrain*.09*n)*vg;
-  gl_FragColor=vec4(mix(mix(col,vec3(clamp(f,0.,1.)),uFilm),cc,mk),1.);
+  vec3 g=vec3(clamp(f,0.,1.)),film=mix(col,g,uFilm);
+  if(uWarm>.001){float sky=step(.99999,texture2D(tDep,vUv).x);vec3 tint=mix(uSkyLo,uSkyHi,smoothstep(.3,1.,vUv.y));
+    vec2 sd=(vUv-uSun.xy)*vec2(uRes.x/uRes.y,1.);float sg=(exp(-dot(sd,sd)*22.)*.55+exp(-dot(sd,sd)*420.))*uSun.z;
+    vec3 w=g*(.3+.85*tint)+tint*.1*sky+uSkyLo*sg;film=mix(film,w,uWarm);cc+=uSkyLo*sg*.5*uWarm;}
+  gl_FragColor=vec4(mix(film,cc,mk),1.);
 }`,depthTest:false,depthWrite:false});
 const pScene=new THREE.Scene(),pCam=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
 {const pq=new THREE.Mesh(new THREE.PlaneGeometry(2,2),post);pq.frustumCulled=false;pScene.add(pq);}
@@ -1422,7 +1453,8 @@ canvas.addEventListener('pointerup',e=>{if(!downXY||document.pointerLockElement)
   if(Math.hypot(e.clientX-x0,e.clientY-y0)>6||performance.now()-t0>400)return;
   const r=canvas.getBoundingClientRect();ndc.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);rayc.setFromCamera(ndc,camera);
   const gs=SRCS.filter(s=>s.pista&&s.gem&&s.gem.g.visible);const hit=rayc.intersectObjects(gs.map(s=>s.gem.mesh),false)[0];
-  if(hit&&hit.distance<30){const s=gs.find(q=>q.gem.mesh===hit.object);if(s)abrirPista(s.pista);}});
+  if(hit&&hit.distance<30){const s=gs.find(q=>q.gem.mesh===hit.object);if(s)abrirPista(s.pista);return;}
+  if(LINEAS.length){const lh=rayc.intersectObjects(LINEAS.map(l=>l.G.mesh),false)[0];if(lh&&lh.distance<30){const l=LINEAS.find(q=>q.G.mesh===lh.object);if(l)abrirLinea(l.i);}}});
 
 // cálculo de cada pista
 const horas=h=>h<1?Math.round(h*60)+' min':h<48?(h<10?h.toFixed(1):Math.round(h))+' h':Math.round(h/24)+' días';
@@ -1503,6 +1535,7 @@ $('pistaOv').addEventListener('pointerdown',e=>{if(e.target===$('pistaOv'))cerra
 let avisoT=null;
 function avisar(txt,ms){$('aviso').textContent=txt;$('aviso').hidden=false;clearTimeout(avisoT);avisoT=setTimeout(()=>{$('aviso').hidden=true;},ms||7000);}
 function renderMision(){
+  if(CONSULTA){lineasMision();return;}
   // cuentan las gemas que hoy se pueden leer: la roja necesita tu nacimiento y la rosa tu tirada
   const disponible=k=>k==='natal'?!!(NAC&&NAC.fecha):k==='nuclear'?CUA.some(c=>c.tipo==='tirada'&&c.dia===dia()):true;
   const tipos=[...new Set(SRCS.map(s=>s.pista).filter(Boolean))].filter(disponible);const leidas=tipos.filter(hallada);
@@ -1510,8 +1543,9 @@ function renderMision(){
   $('misTxt').textContent=leidas.length===tipos.length&&tipos.length?'todas apagadas':'por leer '+(tipos.length-leidas.length);
   $('misGem').innerHTML=tipos.map(k=>`<i class="${hallada(k)?'off':''}" style="--pc:${PISTAS[k].col}" title="${PISTAS[k].nombre}"></i>`).join('');
   if(tipos.length&&leidas.length===tipos.length&&$('pistaOv').hidden&&$('start').hidden&&!store.get('completo-'+dia(),false)){store.set('completo-'+dia(),true);
-    setTimeout(()=>{avisar('Apagaste todas las gemas de hoy. Su luz quedó en los jardines; mañana vuelven a encenderse.',9000);
-      setTargets({esporas:Math.max(P.esporas,.75)},8);if(audioOn){const t0=ctx.currentTime;[523.25,659.25,783.99,1046.5].forEach((f,i)=>ping(listener.getInput(),t0+i*.18,f,'sine',.07,3));}},2200);}
+    setTimeout(()=>{if(audioOn){const t0=ctx.currentTime;[523.25,659.25,783.99,1046.5].forEach((f,i)=>ping(listener.getInput(),t0+i*.18,f,'sine',.07,3));}
+      const tr=CUA.slice().reverse().find(c=>c.tipo==='tirada'&&c.dia===dia());
+      abrirCierre({hex:tr?tr.hex:null,nota:'Apagaste todas las gemas de hoy. Su luz quedó en los jardines; mañana vuelven a encenderse.'});},2200);}
 }
 function renderPistas(){renderMision();
   const enBosque=new Set(SRCS.map(s=>s.pista).filter(Boolean));let n=0;
@@ -1928,7 +1962,7 @@ function apply(t,dt,now){
   const wu=waterMat.uniforms;wu.uTone.value=tone;wu.uRain.value=P.lluvia;wu.uWave.value=P.oleaje+P.viento*.15;wu.uDark.value=DARK;
   const lc=DARK>.5?.85:0;lineMat1.color.setScalar(lc);lineMat2.color.setScalar(lc);
   const pu=post.uniforms;pu.uFilm.value=P.pelicula;pu.uGrain.value=P.grano;pu.uCon.value=P.contraste;pu.uExp.value=P.exposicion;pu.uVig.value=P.vineta;pu.uInk.value=P.tinta;pu.uSeed.value=Math.floor(t*24)%997;pu.uFlash.value=fl*.15;
-  animGems(t);oasisU.uDark.value=DARK;if(oasisDirty&&now-oasisT>250){oasisT=now;rehacerOasis();}
+  animGems(t);animLineas(t,dt);oasisU.uDark.value=DARK;if(oasisDirty&&now-oasisT>250){oasisT=now;rehacerOasis();}
   SRCS.forEach((s,i)=>{s.orb.position.y=Math.sin(t*.9+i*1.7)*.25;const k=.75+.25*Math.sin(t*1.4+i);s.orb.material.color.setScalar((DARK>.5?k:k*.15)*(.35+.65*s.act));});
   if(now-actT>200){actT=now;sleepWake();SRCS.forEach(s=>{const sy=SYN[s.sintesis];s.act=(!s.buffer&&sy&&sy.act)?sy.act():1;if(audioOn)s.gain.gain.setTargetAtTime(s.act,ctx.currentTime,.8);});}
   if(audioOn&&zumbG&&now-zT>200){zT=now;let dm=1e9;SRCS.forEach(s=>{if(s.oi!=null)dm=Math.min(dm,Math.hypot(pos.x-s.gx,pos.z-s.gz));});const z=Math.max(0,1-dm/11);zumbG.gain.setTargetAtTime(.05*z*z*(1-DARK*.8)*(1-P.lluvia*.8),ctx.currentTime,.5);}
@@ -1939,7 +1973,8 @@ function apply(t,dt,now){
 let last=performance.now(),fr=0,fpsT=last,fps=0,meterT=0,mapT=0,lastSync=0,chunkT=0,shTick=0,shX=1e9,shZ=1e9,shSun='',adT=last,adF=0,lowT=0;
 function frame(now){
   requestAnimationFrame(frame);const dt=Math.min(.05,(now-last)/1000);last=now;const t=now/1000;
-  if(playing)stepRoute(now);else move(dt);
+  if(CIERRE)pasoCierre(now,dt);else if(playing)stepRoute(now);else move(dt);
+  calidez(dt);
   if(stepTrans(now)&&now-lastSync>80){syncUI();lastSync=now;}
   apply(t,dt,now);
   renderer.info.reset();
@@ -2106,6 +2141,155 @@ function entrarAlClaro(){
   avisar('camina hacia la luz: ahí está tu semilla',5000);
 }
 
+/* ---------- dos caminos junto a tu planta: contemplar o consultar ----------
+   La semilla ya es la tirada: la luz del retrato cayó en lugar de las monedas.
+   Las seis líneas de su hexagrama crecen de abajo hacia arriba, como la planta: raíz, tallo, ramas, hojas, flor y semilla.
+   Todo se puede leer desde el primer día: es la experiencia de un momento. */
+let CONSULTA=null,LINEAS=[],lineaCerca=null,contemplarT=null;
+const ETAPAS=[['raíz','lo que te sostiene'],['tallo','lo que se levanta'],['ramas','lo que está adentro'],['hojas','la imagen'],['flor','lo que se abre'],['semilla','la pregunta']];
+const HERB=[['Dōgen','Uji (ser-tiempo)','el tiempo no pasa junto a las cosas: cada cosa es su tiempo. este instante está completo.'],
+  ['Goethe','La metamorfosis de las plantas','toda la planta es una sola forma que se transforma: la hoja se vuelve tallo, cáliz, pétalo y semilla.'],
+  ['Jorge Luis Borges','El jardín de senderos que se bifurcan','el tiempo se bifurca hacia innumerables futuros; cada rama es uno de ellos.'],
+  ['Roland Barthes','La cámara lúcida','una fotografía no cuenta lo que fue: certifica que fue. el minuto de tu retrato es único y ya pasó; por eso queda.'],
+  ['Carl Gustav Jung','prólogo al I Ching de Richard Wilhelm','lo que nace en un momento lleva la cualidad de ese momento. el hexagrama no predice: retrata el instante.'],
+  ['Emanuele Coccia','La vida de las plantas','la semilla es una vida que espera: guarda el mundo entero plegado hasta encontrar su momento.']];
+const hexCol=c=>'#'+c.map(v=>Math.round(Math.min(1,v)*255).toString(16).padStart(2,'0')).join('');
+function contemplar(){
+  CONSULTA=null;quitarLineas();entrarAlClaro();
+  avisar('respira. mira cómo crece. en un momento el bosque se abrirá.',7000);
+  clearTimeout(contemplarT);contemplarT=setTimeout(function esperar(){
+    if(CIERRE)return;const ocupado=!$('pistaOv').hidden||!$('start').hidden||!$('xinasOv').hidden||!$('bigOv').hidden;
+    if(ocupado||!miSem){contemplarT=setTimeout(esperar,4000);return;}
+    if(Math.hypot(pos.x-miSem.x,pos.z-miSem.z)<16)abrirCierre({hex:miSem.hex.n,semilla:miSem});},30000);
+}
+function consultar(preg){
+  clearTimeout(contemplarT);if(!miSem){entrarAlClaro();return;}
+  CONSULTA={s:miSem.s,pregunta:preg||'',leidas:[]};entrarAlClaro();ponerLineas();renderMision();
+  avisar('seis luces rodean tu planta: son las líneas de tu hexagrama, de la raíz a la flor. ábrelas en el orden que quieras.',8000);
+}
+function quitarLineas(){LINEAS.forEach(l=>scene.remove(l.G.g));LINEAS=[];lineaCerca=null;$('bLinea').hidden=true;}
+function ponerLineas(){
+  quitarLineas();const e=miSem,P0=window.Planta,pal=P0.palette(P0.decode(e.s));
+  const[mx,mz]=miradorDe(e),a0=Math.atan2(mz-e.z,mx-e.x);
+  for(let i=0;i<6;i++){const G=makeGem(),an=a0+Math.PI*(i/5-.5)*1.5,r=2.7,x=e.x+Math.cos(an)*r,z=e.z+Math.sin(an)*r;
+    const col=new THREE.Color(...P0.paletteRGB(pal,.08+i*.16));const mx2=Math.max(col.r,col.g,col.b,.01);col.multiplyScalar(.95/mx2);
+    G.mat.uniforms.uCol.value.copy(col);G.bm.uniforms.uCol.value.copy(col);G.bm.uniforms.uAmt.value=.45;G.halo.material.color.copy(col);G.halo.scale.set(1.8,1.8,1.8);G.beam.scale.set(.6,.6,.6);
+    G.g.scale.set(.75,.75,.75);G.g.position.set(x,H(x,z)+.55+i*.28,z);G.g.visible=true;scene.add(G.g);
+    LINEAS.push({i:i+1,G,x,z,col:'#'+col.getHexString(),off:0});}
+}
+function lineasMision(){
+  $('mision').hidden=!LINEAS.length||!$('start').hidden;const n=CONSULTA.leidas.length;
+  $('misTxt').textContent=n>=6?'tu semilla habló':'líneas por leer '+(6-n);
+  $('misGem').innerHTML=LINEAS.map(l=>`<i class="${CONSULTA.leidas.includes(l.i)?'off':''}" style="--pc:${l.col}" title="línea ${l.i}"></i>`).join('');
+}
+function animLineas(t,dt){if(!LINEAS.length)return;let best=null,bd=2.6;
+  for(const l of LINEAS){const o=CONSULTA&&CONSULTA.leidas.includes(l.i)&&$('pistaOv').hidden?1:0;l.off+=(o-l.off)*Math.min(1,dt*1.2);const G=l.G;
+    const sc=CIERRE?0:.75*(1-.55*l.off);G.g.scale.setScalar(G.g.scale.x+(sc-G.g.scale.x)*Math.min(1,dt*(CIERRE?.8:1.5)));G.g.visible=G.g.scale.x>.01;
+    G.mesh.rotation.y+=dt*(.8-.7*l.off);G.mesh.position.y=Math.sin(t*1.3+l.i*1.7)*.08*(1-l.off)-.5*l.off;G.mat.uniforms.uHall.value=l.off;G.bm.uniforms.uAmt.value=.45*(1-l.off);G.beam.visible=l.off<.98;
+    G.halo.material.opacity=(.28+.1*Math.sin(t*2.2+l.i))*(1-l.off*.85);
+    const d=Math.hypot(pos.x-l.x,pos.z-l.z);if(d<bd){bd=d;best=l.i;}}
+  if(best!==lineaCerca){lineaCerca=best;const b=$('bLinea');b.hidden=best==null||!$('pistaOv').hidden;
+    if(best!=null){const l=LINEAS[best-1];b.style.setProperty('--pc',l.col);b.style.borderColor=l.col;b.textContent=(CONSULTA.leidas.includes(best)?'releer · ':'abrir · ')+'línea '+best+' · '+ETAPAS[best-1][0]+(isTouch?'':'  (E)');}}
+}
+addEventListener('keydown',e=>{if(e.code==='KeyE'&&lineaCerca!=null&&$('pistaOv').hidden&&!CIERRE&&!nearGem)abrirLinea(lineaCerca);});
+function abrirLinea(i){
+  if(!CONSULTA||!miSem)return;soltarPuntero();const e=miSem,n=e.hex.n,Hx=IC.hex[n],tg=A.trigramas(n),inf=IC.trigramas[tg.inf],su=IC.trigramas[tg.sup],ls=A.lineas(n),l=LINEAS[i-1],[et,eq]=ETAPAS[i-1],hb=HERB[i-1];
+  $('pBox').style.setProperty('--pc',l.col);$('pTit').textContent='línea '+i+' · '+et;$('pHora').textContent=eq;
+  let cuerpo='';
+  if(i===1)cuerpo=`<p class="pk">Abajo, ${inf.n} ${inf.s}: ${inf.i}.</p><p class="ptx">Es el suelo de tu instante: lo que estaba debajo, sosteniéndote sin que lo vieras.</p>`;
+  else if(i===2)cuerpo=`<p class="pk">${Hx.k}</p>`;
+  else if(i===3){const nu=A.nuclear(n),N=IC.hex[nu];cuerpo=nu===n?`<p class="ptx">Aquí lo de adentro y lo de afuera coinciden: el núcleo de tu hexagrama es el mismo.</p><p class="pk">${Hx.k}</p>`:`<p class="ptx">Dentro de tu hexagrama, en sus líneas interiores, se esconde el ${nu}: ${N.n.toLowerCase()}.</p><p class="pk">${N.k}</p>`;}
+  else if(i===4)cuerpo=`<p class="ptx"><b>imagen</b>${Hx.i}</p>`;
+  else if(i===5)cuerpo=`<p class="ptx"><b>juicio</b>${Hx.j}</p><p class="ptx">Arriba, ${su.n} ${su.s}: ${su.i}.</p>`;
+  else cuerpo=(CONSULTA.pregunta?`<p class="pq" style="font-size:13px">Tu pregunta: «${esc(CONSULTA.pregunta)}»</p>`:'')+`<p class="pq">${Hx.q}</p><p class="ptx">No es una respuesta: es una pista. Tómala sin prisa, como se guarda una semilla.</p>`;
+  const html=hexCab(n,{line:i})+`<p class="pctx">Línea ${i}, ${ls[i-1]?'firme (yang)':'abierta (yin)'}. ${et[0].toUpperCase()+et.slice(1)}: ${eq}.</p>`+cuerpo+
+    `<p class="lec" style="font-size:12px;color:var(--dim);border-left:2px solid ${l.col};padding-left:10px">${hb[2]}<span style="display:block;font-size:10px;margin-top:3px;color:${l.col}">a partir de ${hb[0]}, <i>${hb[1]}</i></span></p>`+
+    `<div class="flex"><button id="pGuia">¿cómo se lee?</button><button id="pX">cerrar</button></div>`;
+  $('pBody').innerHTML=html;$('pBody').scrollTop=0;$('pistaOv').hidden=false;$('bLinea').hidden=true;$('bPista').hidden=true;
+  $('pX').onclick=()=>{cerrarPista();lineaCerca=undefined;if(CONSULTA.leidas.length>=6&&!CONSULTA.cerrada){CONSULTA.cerrada=true;setTimeout(()=>abrirCierre({hex:n,semilla:e}),2400);}};$('pGuia').onclick=abrirGuia;
+  if(!CONSULTA.leidas.includes(i))CONSULTA.leidas.push(i);
+  if(audioOn){const t0=ctx.currentTime,c=campanas(e);ping(listener.getInput(),t0,c.f(i+3),'sine',.06,3);ping(listener.getInput(),t0+.12,c.f(i+5),'sine',.04,3);}
+  renderMision();
+  if(CONSULTA.leidas.length>=6)$('pX').textContent='mirar el horizonte';
+}
+/* campanas en la tónica de la semilla, con la misma escala que su música en Xinas */
+function campanas(e){const raices=[110,116.54,123.47,130.81,138.59,146.83,155.56,164.81,174.61,185,196,207.65],ESC=[[0,2,4,7,9],[0,3,5,7,10],[0,2,3,7,8],[0,1,5,7,10],[0,2,4,6,7,9,11],[0,2,3,5,7,9,10]];
+  let root=130.81,esc=ESC[0];if(e&&e.s){const b=window.Planta.decode(e.s);root=raices[b[3]%12];esc=ESC[e.hex.n%6];}else if(e&&e.hex)esc=ESC[e.hex%6];
+  return{f:k=>root*4*Math.pow(2,(esc[((k%esc.length)+esc.length)%esc.length]+12*Math.floor(k/esc.length))/12)};}
+
+/* ---------- el cierre: la toma se abre, el clima se entibia y el sol vuelve ----------
+   Antes de las 12 (hora de este teléfono) amanece; después, atardece.
+   Con las tiradas duras no se embellece nada: la toma se abre igual, pero la luz queda como estaba. */
+const DURAS=new Set([12,23,29,36,39,47]);
+let CIERRE=null,warmT=0;
+const poscam=new THREE.Vector3();
+function calidez(dt){const u=post.uniforms.uWarm;u.value+=(warmT-u.value)*Math.min(1,dt/(warmT>u.value?9:14));if(u.value<.002&&!warmT)u.value=0;}
+function abrirCierre(o){
+  if(CIERRE)return;clearTimeout(contemplarT);
+  ['pistaOv','guiaOv','bigOv'].forEach(k=>{if($(k))$(k).hidden=true;});soltarPuntero();
+  const hr=new Date().getHours(),amanece=hr<12,dura=o.hex!=null&&DURAS.has(o.hex);
+  const foco=o.semilla?{x:o.semilla.x,z:o.semilla.z}:{x:pos.x-Math.sin(yaw)*6,z:pos.z-Math.cos(yaw)*6};
+  let dx=pos.x-foco.x,dz=pos.z-foco.z,dl=Math.hypot(dx,dz);if(dl<.5){dx=Math.sin(yaw);dz=Math.cos(yaw);dl=1;}dx/=dl;dz/=dl;
+  const dist=Math.max(dl,4)+6,ex=foco.x+dx*dist,ez=foco.z+dz*dist,ey=Math.max(H(ex,ez),H(foco.x,foco.z))+3.2;
+  const ya=Math.atan2(-(foco.x-ex),-(foco.z-ez));
+  CIERRE={t0:performance.now(),dura,amanece,o,
+    a:{x:camera.position.x,y:camera.position.y,z:camera.position.z,yaw,pitch,fov:camera.fov},
+    b:{x:ex,y:ey,z:ez,yaw:ya,pitch:-.1,fov:86},guion:[],fin:false};
+  const az=((ya*180/Math.PI-180+18)%360+360)%360;CIERRE.az=az;
+  if(!dura){CIERRE.prev={};const tg={lejania:.84,tono:.9,bruma:.2,luz:1.55,sol:amanece?7:5,azimut:az,sombra:.32,viento:.1,lluvia:0,nieve:0,esporas:.15,exposicion:.06,contraste:1.08};
+    for(const k in tg)CIERRE.prev[k]=P[k];rayos=false;setTargets(tg,22);
+    const pu=post.uniforms;if(amanece){pu.uSkyLo.value.setRGB(1,.72,.48);pu.uSkyHi.value.setRGB(.62,.74,1);}else{pu.uSkyLo.value.setRGB(1,.5,.32);pu.uSkyHi.value.setRGB(.56,.44,.78);}
+    setTimeout(()=>{if(CIERRE&&!CIERRE.fin)warmT=1;},1500);}
+  document.body.classList.add('encierre');$('cierre').hidden=false;$('cF').className='fin';$('cF').innerHTML='';$('cS').textContent='';$('cSaltar').hidden=false;
+  const cb=campanas(o.semilla||{hex:o.hex});const sem=!!o.semilla;
+  const L=dura?['deja que esto se asiente, sin juzgarlo.','todo lo que es, cambia.']:amanece?['el sol vuelve a salir.','la vida continúa.']:['el día se cierra entero.','mañana vuelve la luz.'];
+  const G=CIERRE.guion,txt=(t,s)=>G.push([t,()=>dec(s)]);
+  txt(1.5,'detente.');txt(6,sem?'mira lo que crece.':'mira el bosque.');txt(11,'respira hondo.');
+  for(let k=0;k<3;k++){const t=15+k*10;G.push([t,()=>respira(true,k,cb)]);G.push([t+4,()=>respira(false,k,cb)]);}
+  G.push([45,()=>{$('cR').classList.remove('on');$('cS').textContent='';dec('agradece algo de este día, aunque sea pequeño.');}]);
+  G.push([46,()=>{if(audioOn){const t0=ctx.currentTime;[0,2,4,7].forEach((k,i)=>ping(listener.getInput(),t0+i*.35,cb.f(k),'sine',.05,5));}}]);
+  txt(53,L[0]);txt(59,L[1]);G.push([65,()=>finalCierre()]);
+}
+function dec(s){const c=$('cT');c.classList.remove('on');setTimeout(()=>{c.textContent=s;c.classList.add('on');},s===''?0:900);}
+function respira(dentro,k,cb){const r=$('cR');r.classList.add('on');if(k===0&&dentro)dec('');r.style.transition=`transform ${dentro?4:6}s ease-in-out, opacity 1.4s ease`;r.style.transform=`scale(${dentro?1:.45})`;
+  $('cS').textContent=dentro?'inhala':'exhala';
+  if(audioOn&&dentro){const t0=ctx.currentTime;ping(listener.getInput(),t0,cb.f(k*2),'sine',.05,6);ping(listener.getInput(),t0+.02,cb.f(k*2+4),'sine',.025,6);}}
+function finalCierre(){
+  if(!CIERRE)return;const o=CIERRE.o,sem=o.semilla;dec('');$('cSaltar').hidden=true;
+  const F=$('cF');F.innerHTML=`<p>este momento ya es tuyo.</p>${o.nota?`<p class="note">${o.nota}</p>`:''}${sem?'<p class="note">Si un día vuelves, tu planta seguirá aquí, un poco más crecida. Si no, también está bien: ya creció.</p>':''}<div class="flex"><button id="cQuedar">quedarme en el bosque</button>${sem?'<button id="cCompartir">compartir mi semilla</button>':''}</div>`;
+  F.classList.add('on');$('cQuedar').onclick=()=>finCierre(false);if($('cCompartir'))$('cCompartir').onclick=()=>compartirSemilla(sem);
+}
+function compartirSemilla(e){
+  const u=new URL('../xinas/',location.href);u.searchParams.set('s',e.s);if(e.t!=null)u.searchParams.set('t',Math.round(e.t).toString(36));
+  const d={title:'Xinas',text:'Sembré el instante de mi retrato en Endeles: '+e.hex.n+' · '+(IC.hex[e.hex.n]?IC.hex[e.hex.n].n:''),url:u.href};
+  if(navigator.share)navigator.share(d).catch(()=>{});else{try{navigator.clipboard.writeText(d.text+' '+d.url);}catch(err){}avisar('enlace copiado',3000);}
+}
+function finCierre(saltar){
+  if(!CIERRE||CIERRE.fin)return;CIERRE.fin=performance.now();CIERRE.c={x:camera.position.x,y:camera.position.y,z:camera.position.z,yaw,pitch,fov:camera.fov};
+  $('cierre').hidden=true;document.body.classList.remove('encierre');if(CONSULTA){CONSULTA=null;setTimeout(quitarLineas,3000);}
+  if(saltar&&!CIERRE.dura)warmT=0;
+  if(CIERRE.prev)setTimeout(()=>{setTargets(CIERRE&&CIERRE.prev||{},60);},saltar?0:20000);
+  setTimeout(()=>{warmT=0;},saltar?0:24000);
+}
+window.ENDELES_SEM={abrirLinea,abrirCierre,consultar,contemplar};
+const ease=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+function pasoCierre(now,dt){
+  const C=CIERRE,a=C.a,b=C.b;
+  if(C.fin){const k=Math.min(1,(now-C.fin)/2600),e=ease(k),c=C.c,gy=H(c.x,c.z)+1.65;
+    camera.position.set(c.x,c.y+(gy-c.y)*e,c.z);pitch=c.pitch+(.0-c.pitch)*e;camera.fov=c.fov+(62-c.fov)*e;camera.updateProjectionMatrix();camera.rotation.set(pitch,yaw,0);
+    if(k>=1){pos.set(c.x,0,c.z);eyeY=gy;camera.fov=62;camera.updateProjectionMatrix();CIERRE=null;renderMision();if(isTouch)$('joyBase').hidden=false;}
+    return;}
+  const s=(now-C.t0)/1000;
+  while(C.guion.length&&C.guion[0][0]<=s)C.guion.shift()[1]();
+  const k=ease(Math.min(1,s/14));
+  const yb=unwrap(b.yaw,a.yaw);yaw=a.yaw+(yb-a.yaw)*k+Math.sin(s*.05)*.06*Math.min(1,s/14);pitch=a.pitch+(b.pitch-a.pitch)*k;
+  camera.position.set(a.x+(b.x-a.x)*k,a.y+(b.y-a.y)*k+Math.sin(s*.3)*.04,a.z+(b.z-a.z)*k);
+  camera.fov=a.fov+(b.fov-a.fov)*k;camera.updateProjectionMatrix();camera.rotation.set(pitch,yaw,0);
+  pos.x=camera.position.x;pos.z=camera.position.z;
+  if(!C.dura){const el=THREE.MathUtils.degToRad(P.sol),az=THREE.MathUtils.degToRad(P.azimut);
+    poscam.set(camera.position.x+Math.cos(el)*Math.sin(az)*100,camera.position.y+Math.sin(el)*100,camera.position.z+Math.cos(el)*Math.cos(az)*100).project(camera);
+    const u=post.uniforms.uSun.value;u.set(poscam.x*.5+.5,poscam.y*.5+.5,poscam.z<1&&Math.abs(poscam.x)<1.6?.9*Math.min(1,s/20):0);}
+}
 /* ---------- entrada ---------- */
 const hintTxt=isTouch?'Joystick a la izquierda · arrastra a la derecha para mirar · toca una gema para abrirla · toca el mapa para saltar':'Haz clic para mirar con el mouse (Esc lo suelta) · WASD o flechas para caminar · Shift corre · E abre y cierra una gema · 1–6 clima · F película · H oculta';
 $('uHint').textContent=isTouch?'Mejor con audífonos. En iPhone quita el modo silencio para oír el bosque.':'Mejor con audífonos.';$('hint').textContent=hintTxt;$('hint').style.opacity=0;
@@ -2216,7 +2400,9 @@ syncMapUI();buildWorld();eyeY=H(pos.x,pos.z)+1.65;
 setQuality('auto');renderPistas();renderList();renderRoutes();$('tJson').value=exportJSON();syncUI();
 if(CUA.some(c=>c.tipo==='tirada'&&c.dia===dia()))irPaso(3);
 mirarGema();
-$('xEntrar').onclick=entrarAlClaro;$('uMia').onclick=irAMiPlanta;$('bSem').onclick=irAMiPlanta;$('bMia').onclick=irAMiPlanta;$('xTirada').onclick=()=>{$('xinasOv').hidden=true;$('start').hidden=false;irPaso(0);};
+$('xEntrar').onclick=contemplar;$('xPreguntar').onclick=()=>{$('xA').hidden=true;$('xB').hidden=false;$('xinasOv').querySelector('.in').scrollTop=0;setTimeout(()=>$('xPreg').focus(),60);};
+$('xVolver').onclick=()=>{$('xB').hidden=true;$('xA').hidden=false;};$('xCaminar').onclick=()=>consultar($('xPreg').value.trim());
+$('bLinea').onclick=()=>{if(lineaCerca!=null)abrirLinea(lineaCerca);};$('cSaltar').onclick=()=>finCierre(true);$('uMia').onclick=irAMiPlanta;$('bSem').onclick=irAMiPlanta;$('bMia').onclick=irAMiPlanta;$('xTirada').onclick=()=>{$('xinasOv').hidden=true;$('start').hidden=false;irPaso(0);};
 if(XQ)$('start').hidden=true;
 cargarSemillas().then(()=>{if(XQ)llegadaXinas();});
 requestAnimationFrame(frame);
