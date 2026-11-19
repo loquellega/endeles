@@ -487,6 +487,8 @@ body.encierre .bar,body.encierre #col,body.encierre #map,body.encierre #info,bod
 (()=>{
 'use strict';
 const $=s=>document.getElementById(s);
+// Endeles Escena (escena.html): el mismo bosque, escuchando a Alquimia EEG OSC. En index.html ESCN queda vacío.
+const ESCENA=!!window.ENDELES_ESCENA;let ESCN=null,FAUNA=null;
 const isTouch=matchMedia('(pointer:coarse)').matches||(navigator.maxTouchPoints>0&&!matchMedia('(hover:hover)').matches);
 if(isTouch)document.documentElement.classList.add('tactil');
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),sstep=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t);};
@@ -1606,7 +1608,7 @@ function apply(t,dt,now){
   const pu=post.uniforms;pu.uFilm.value=P.pelicula;pu.uGrain.value=P.grano;pu.uCon.value=P.contraste;pu.uExp.value=P.exposicion;pu.uVig.value=P.vineta;pu.uInk.value=P.tinta;pu.uSeed.value=Math.floor(t*24)%997;pu.uFlash.value=fl*.15;
   animGems(t);animLineas(t,dt);oasisU.uDark.value=DARK;if(oasisDirty&&now-oasisT>250){oasisT=now;rehacerOasis();}
   SRCS.forEach((s,i)=>{s.orb.position.y=Math.sin(t*.9+i*1.7)*.25;const k=.75+.25*Math.sin(t*1.4+i);s.orb.material.color.setScalar((DARK>.5?k:k*.15)*(.35+.65*s.act));});
-  if(now-actT>200){actT=now;sleepWake();SRCS.forEach(s=>{const sy=SYN[s.sintesis];s.act=(!s.buffer&&sy&&sy.act)?sy.act():1;if(audioOn)s.gain.gain.setTargetAtTime(s.act,ctx.currentTime,.8);});}
+  if(now-actT>200){actT=now;sleepWake();SRCS.forEach(s=>{const sy=SYN[s.sintesis];s.act=((!s.buffer&&sy&&sy.act)?sy.act():1)*(FAUNA?FAUNA(s):1);if(audioOn)s.gain.gain.setTargetAtTime(s.act,ctx.currentTime,.8);});}
   if(audioOn&&zumbG&&now-zT>200){zT=now;let dm=1e9;SRCS.forEach(s=>{if(s.oi!=null)dm=Math.min(dm,Math.hypot(pos.x-s.gx,pos.z-s.gz));});const z=Math.max(0,1-dm/11);zumbG.gain.setTargetAtTime(.05*z*z*(1-DARK*.8)*(1-P.lluvia*.8),ctx.currentTime,.5);}
   if(audioOn){const n=ctx.currentTime;windG.gain.setTargetAtTime(P.viento*.16*(.7+.3*Math.sin(t*.37)),n,.4);windLP.frequency.setTargetAtTime(220+P.viento*520,n,.4);rainG.gain.setTargetAtTime(P.lluvia*.22,n,.4);}
 }
@@ -1615,10 +1617,13 @@ function apply(t,dt,now){
 let last=performance.now(),fr=0,fpsT=last,fps=0,meterT=0,mapT=0,lastSync=0,chunkT=0,shTick=0,shX=1e9,shZ=1e9,shSun='',adT=last,adF=0,lowT=0;
 function frame(now){
   requestAnimationFrame(frame);const dt=Math.min(.05,(now-last)/1000);last=now;const t=now/1000;
-  if(CIERRE)pasoCierre(now,dt);else if(playing)stepRoute(now);else move(dt);
+  if(ESCN&&ESCN.camara(now,dt)){}else if(CIERRE)pasoCierre(now,dt);else if(playing)stepRoute(now);else move(dt);
+  if(ESCN)ESCN.trasMover(dt);
   calidez(dt);
   if(stepTrans(now)&&now-lastSync>80){syncUI();lastSync=now;}
+  if(ESCN)ESCN.antes(t,dt,now);
   apply(t,dt,now);
+  if(ESCN)ESCN.despues();
   renderer.info.reset();
   if(chunkDirty||now-chunkT>150){chunkT=now;chunkDirty=false;updateChunks();}
   // sombras: se recalculan al moverse, al cambiar el sol o cada pocos cuadros (para el viento), no en cada cuadro
@@ -2046,7 +2051,8 @@ $('xEntrar').onclick=contemplar;$('xPreguntar').onclick=()=>{$('xA').hidden=true
 $('xVolver').onclick=()=>{$('xB').hidden=true;$('xA').hidden=false;};$('xCaminar').onclick=()=>consultar($('xPreg').value.trim());
 $('bLinea').onclick=()=>{if(lineaCerca!=null)abrirLinea(lineaCerca);};$('cSaltar').onclick=()=>finCierre(true);$('uMia').onclick=irAMiPlanta;$('bSem').onclick=irAMiPlanta;$('bMia').onclick=irAMiPlanta;$('xTirada').onclick=()=>{$('xinasOv').hidden=true;$('start').hidden=false;irPaso(0);};
 if(XQ)$('start').hidden=true;
-cargarSemillas().then(()=>{if(XQ)llegadaXinas();});
+if(!ESCENA)cargarSemillas().then(()=>{if(XQ)llegadaXinas();});
+/*ESCENA*/
 requestAnimationFrame(frame);
 })();
 </script>

@@ -21,5 +21,14 @@ cab += pwa
 i = s.find('<canvas id="gl">')
 sw = "<script>if('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(function(){});</script>"
 s = cab + s[:i].replace('<meta name="claude:viewport-fit-sides" content="cover">\n', '') + '</head>\n<body>\n' + s[i:] + '\n' + sw + '\n</body>\n</html>\n'
-open(os.path.join(raiz, 'index.html'), 'w', encoding='utf-8').write(s)
-print('index.html listo:', len(s), 'bytes')
+indice = s.replace('/*ESCENA*/\n', '')
+open(os.path.join(raiz, 'index.html'), 'w', encoding='utf-8').write(indice)
+print('index.html listo:', len(indice), 'bytes')
+
+# Endeles Escena: el mismo bosque para teatro, escuchando a Alquimia EEG OSC (fuente/escena.js).
+# Sin app instalable ni service worker: se abre local, en el navegador o como HTML de Pixera.
+e = s.replace('/*ESCENA*/', leer('fuente', 'escena.js'))
+e = e.replace(pwa, '').replace('\n' + sw, '').replace('<title>Endeles</title>', '<title>Endeles Escena</title>')
+e = e.replace('<script src="lib/three.min.js"></script>', '<script>window.ENDELES_ESCENA = 1;</script>\n<script src="lib/three.min.js"></script>')
+open(os.path.join(raiz, 'escena.html'), 'w', encoding='utf-8').write(e)
+print('escena.html listo:', len(e), 'bytes')

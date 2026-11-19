@@ -39,7 +39,24 @@ Es una página estática: no necesita base de datos. Solo el claro de las semill
 
 Controles de escritorio: clic para mirar con el mouse (Esc lo suelta), WASD o flechas para caminar, Shift para correr, E abre y cierra una gema, 1–6 cambia el clima, F la película, P reproduce un recorrido y H oculta la interfaz.
 
-Para modificar la app, edita `desarrollo/src.html` o `fuente/*.js` y reconstruye con `python3 desarrollo/construir.py`. El detalle completo está en [LEEME.txt](LEEME.txt).
+Para modificar la app, edita `desarrollo/src.html` o `fuente/*.js` y reconstruye con `python3 desarrollo/construir.py` (genera `index.html` y `escena.html`). El detalle completo está en [LEEME.txt](LEEME.txt).
+
+### Endeles Escena (para teatro)
+
+`escena.html` es el mismo bosque preparado para escena: escucha a [Alquimia EEG OSC](https://github.com/loquellega/alquimia-eeg-osc) y **cada persona que se pone el casco es un bosque distinto**. No tiene I Ching, gemas ni semillas: solo el bosque, sus cámaras y sus cues.
+
+- **Firma:** al pulsar «nueva persona» (o con `/endeles/persona/nueva` por OSC) mide 45 s de señal válida. El promedio y la variación de cada banda deciden la semilla, la apertura del bosque, el relieve, el agua y cuántos animales lo habitan. El cambio ocurre tras una cortina a negro.
+- **Clima vivo:** las bandas y métricas mueven la niebla, el viento, la bruma, las esporas, la luz, la viñeta y el contraste; el estrés hace que los animales callen. Un parpadeo es un destello y un trino. Si la señal deja de ser válida, el clima vuelve solo al reposo.
+- **Diez cámaras y cues:** cada cue lleva a una cámara con corte, recorrido (la cámara viaja esquivando troncos) o fundido a negro, con duración, curva, altura del vuelo y clima opcional. GO con la barra espaciadora, desde el panel o con `/endeles/go`.
+- **Montaje:** cámaras, cues y mapeo se guardan en el navegador y se exportan como `montaje.json` (si está junto a `escena.html` en un servidor, se carga solo).
+
+**Conexión:** abre Alquimia EEG OSC (v0.8 o posterior); su relevo WebSocket queda en `ws://localhost:9203`. Los cues se mandan por OSC al puerto 9210 del puente desde Pixera, Isadora o QLab: `/endeles/go`, `/endeles/cue n`, `/endeles/cam n`, `/endeles/back`, `/endeles/persona/nueva`, `/endeles/persona/fijar`, `/endeles/clima n`, `/endeles/clima/congelar 0|1`, `/endeles/fade valor segundos`, `/endeles/ui 0|1`.
+
+**Parámetros de la dirección:** `?auto=1` entra sin clic (para Pixera u otra salida), `&ui=0` imagen limpia, `&sim=1` simulación sin casco, `&puente=192.168.1.20:9203` otro puente, `&calibracion=30` segundos de medición, `&sonido=0` sin sonido.
+
+**Teclas:** espacio o G = GO · B = atrás · [ ] = elegir el siguiente cue · 1–0 = corte a cámara · Shift+1–0 = guardar la vista en esa cámara · WASD camina libre · Q/Z sube y baja · H oculta la interfaz.
+
+**Ojo:** una página servida por https no puede abrir `ws://` hacia otra computadora de la red. En función, abre `escena.html` como archivo local (o desde un servidor local por http) en la computadora que proyecta. El contrato completo está en el proyecto: *Endeles Escena: contrato OSC + JSON*.
 
 ## English
 
@@ -58,6 +75,10 @@ Under six of those sounds glows a colored gem, the only color in the grey forest
 - **Weather:** six blending presets, or live weather from Open-Meteo, including real sun position and the pond's tide.
 - **HP5 film look**, a seed-based forest generator, an editable map, camera paths and JSON export/import.
 - **Desktop and phone**, with adaptive rendering quality.
+
+### Endeles Escena (for theatre)
+
+`escena.html` is the same forest for the stage. It listens to Alquimia EEG OSC over WebSocket (port 9203): each person wearing the headset gets their own forest (a 45 s signature sets seed, openness, relief, water and wildlife) and their live EEG modulates the weather. Ten cameras and a cue list with GO (space bar or `/endeles/go` via OSC to the bridge's port 9210), with cut, travel or fade transitions. Use `?auto=1&ui=0` for Pixera or any clean output, `&sim=1` to test without a headset.
 
 ### Install
 
