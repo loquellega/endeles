@@ -78,7 +78,7 @@ const win=document.createElement('section');win.className='win';win.id='wEsc';
 win.innerHTML=`<h3>Escena <span id="eEst">sin puente</span></h3><div class="in">
 <div class="lf"><input type="text" id="ePuente" aria-label="puente WebSocket" placeholder="localhost:9203"><button id="eConectar">conectar</button></div>
 <div class="flex"><label class="chk"><input type="checkbox" id="eSim"> simulación</label><span class="note">casco</span>${sel('eCasco',[[1,'1 · EPOC+'],[2,'2 · Insight'],[3,'3 · otro']])}</div>
-<div class="sub">persona</div><p class="note" id="ePers"></p><div class="meter"><i id="eCal"></i></div>
+<div class="sub">persona</div><div id="eColor" style="height:6px;background:#555"></div><p class="note" id="ePers"></p><div class="meter"><i id="eCal"></i></div>
 <div class="flex"><button id="eNueva">nueva persona</button><button id="eFijar">fijar ahora</button></div>
 <div class="sub">clima vivo</div><div id="eSen" class="in" style="padding:0;gap:3px"></div>
 <div class="row"><span>intensidad</span><input id="eInt" type="range" min="0" max="2" step="0.05"><output id="oInt"></output></div>
@@ -162,7 +162,7 @@ function comando(addr,a){
 
 /* ---------- firma: cada persona es un bosque ---------- */
 const FIRMA={estado:'sin',t:0,n:0,s:{},q:{},m:{},parp:0,id:null,vec:null};
-function nuevaPersona(id){Object.assign(FIRMA,{estado:'calibrando',t:0,n:0,s:{},q:{},m:{},parp:0,id:id||null,vec:null});if(sim)simPersona();pintarPersona();}
+function nuevaPersona(id){HOJA.maskObj=0;Object.assign(FIRMA,{estado:'calibrando',t:0,n:0,s:{},q:{},m:{},parp:0,id:id||null,vec:null});if(sim)simPersona();pintarPersona();}
 function acumular(dt,vivo){
   if(FIRMA.estado!=='calibrando'||!vivo)return;
   FIRMA.t+=dt;FIRMA.n++;
@@ -172,7 +172,7 @@ function acumular(dt,vivo){
 }
 function fijar(){
   if(FIRMA.estado!=='calibrando')return;
-  if(FIRMA.n<20){FIRMA.estado='sin';aviso('sin datos válidos: el bosque no cambió');pintarPersona();return;}
+  if(FIRMA.n<5){FIRMA.estado='sin';aviso('sin datos válidos: el bosque no cambió');pintarPersona();return;}
   const n=FIRMA.n,mu=b=>(FIRMA.s[b]||0)/n,sd=b=>Math.sqrt(Math.max(0,(FIRMA.q[b]||0)/n-mu(b)**2));
   const met=k=>FIRMA.m[k]&&FIRMA.m[k][1]?FIRMA.m[k][0]/FIRMA.m[k][1]:.5;
   const vec=BANDAS.map(mu).concat(BANDAS.map(sd),[FIRMA.parp/Math.max(FIRMA.t/60,.1),met('relaxation'),met('stress')]).map(r2);
@@ -183,16 +183,72 @@ let RIQ=.6,BASE_ESC=null;
 function aplicarFirma(vec,id){
   const[a,t,bl,bh,g,...rest]=vec,sdm=(rest[0]+rest[1]+rest[2]+rest[3]+rest[4])/5,br=rest[5]||0,rel=rest[6]??.5,str=rest[7]??.5;
   let h=2166136261;for(const c of vec.join(',')){h^=c.charCodeAt(0);h=Math.imul(h,16777619);}
-  const ap=clamp(.5+(a-(bl+bh)/2)*1.2,0,1);
+  const ap=clamp(.5+(a-(bl+bh)/2)*1.2,0,1),pal=paletaDe(vec,h);
   RIQ=clamp(.15+g*.5+sdm*2+br/60,0,1);
   BASE_ESC={densidad:r2(.5+.45*(1-ap)),marea:r2(.3+.6*t),bruma:r2(.15+.55*t),tono:r2(clamp(.5+.35*rel-.2*str,.1,.95)),luz:r2(.75+.6*rel),sol:Math.round(12+40*rel),lejania:r2(.35+.45*ap)};
   const mundo={semilla:1+((h>>>0)%999),arboles:Math.round(8+12*ap),relieve:r2(.35+1.5*bh),escala:r2(clamp(.6+sdm*4,.4,2.5))};
-  Object.assign(FIRMA,{estado:'fija',vec,id:id||FIRMA.id,mundo,ap});
+  Object.assign(FIRMA,{estado:'fija',vec,id:id||FIRMA.id,mundo,ap,pal});
   cortina(()=>{Object.assign(W,mundo);syncMapUI();buildWorld();setTargets(BASE_ESC,0);applyDensity();climaNom='persona';$('climaNom').textContent='persona';climaBtns.forEach(b=>b.classList.remove('on'));
-    if(FIJA)ponerPose(poseDe(FIJA));shadowDirty=true;});
+    if(FIJA)ponerPose(poseDe(FIJA));shadowDirty=true;
+    HOJA.colA.copy(pal.a);HOJA.colB.copy(pal.b);HOJA.cantObj=pal.cant;HOJA.cant=pal.cant*.4;HOJA.mask=0;HOJA.maskObj=1;});
   pintarPersona();
 }
 FAUNA=s=>{const k=ANIMALES.indexOf(s.sintesis);if(k<0)return 1;return(k<Math.round(1+5*RIQ)?1:0)*(1-.85*ESTRES);};
+
+/* ---------- hojas: el bosque es gris hasta que una persona le imprime su color ----------
+   Crecen en las puntas reales de las ramas (treeGeo guarda dónde quedan) y se mueven con el mismo viento.
+   Escriben alfa < 1 como las gemas: la película las deja en color en vez de pasarlas a gris. */
+// silueta de hoja: abanico desde el centro, con el borde redondeado y una leve curva en la nervadura
+const hojaGeo=(()=>{const R=[[0,0],[.06,.05],[.1,.12],[.11,.19],[.08,.27],[0,.34],[-.08,.27],[-.11,.19],[-.1,.12],[-.06,.05]],c=[0,.16,.025],v=[];
+  for(let i=0;i<R.length;i++){const a=R[i],b=R[(i+1)%R.length];v.push(c[0],c[1],c[2],a[0],a[1],Math.abs(a[0])*.12,b[0],b[1],Math.abs(b[0])*.12);}
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(v,3));g.computeVertexNormals();return g;})();
+const HOJA={cant:.35,cantObj:.35,mask:0,maskObj:0,colA:new THREE.Color(.55,.55,.55),colB:new THREE.Color(.7,.7,.7),mallas:[]};
+const hojaMat=new THREE.ShaderMaterial({side:THREE.DoubleSide,
+  uniforms:{uT:PU.uT,uWind:U.uWind,uFogD:PU.uFogD,uFog:{value:fog.color},uMask:{value:0},uColA:{value:HOJA.colA},uColB:{value:HOJA.colB}},
+  vertexShader:`attribute vec4 aSw;attribute vec2 aR;uniform float uT,uWind;uniform vec3 uColA,uColB;varying vec3 vC,vN;varying float vD;
+void main(){vec4 w=instanceMatrix*vec4(position,1.);float hh=max(aSw.z,0.);
+  float sw=(sin(uT*1.1+aSw.x*.21+aSw.y*.17)+.4*sin(uT*2.7+aSw.x*.5))*uWind*.0032*hh*hh*aR.y;
+  float c=cos(aSw.w),s=sin(aSw.w);w.x+=c*sw+s*sw*.6;w.z+=-s*sw+c*sw*.6;
+  float fl=sin(uT*(2.+aR.x*3.)+aR.x*40.)*(.03+.1*uWind);w.y+=fl;w.x+=fl*.5;
+  vN=normalize(mat3(instanceMatrix)*normal);vec4 mv=viewMatrix*w;vD=-mv.z;gl_Position=projectionMatrix*mv;vC=mix(uColA,uColB,aR.x);}`,
+  fragmentShader:`uniform vec3 uFog;uniform float uFogD,uMask;varying vec3 vC,vN;varying float vD;
+void main(){float d=abs(dot(normalize(vN),normalize(vec3(.35,.85,.4))));vec3 c=vC*(.45+.7*d);float f=exp(-pow(uFogD*vD,2.));
+  gl_FragColor=vec4(mix(uFog,c,f),1.-f*uMask);}`});
+function hojas(){
+  HOJA.mallas.forEach(m=>{scene.remove(m);m.dispose();m.geometry.dispose();});HOJA.mallas=[];
+  const m4=new THREE.Matrix4(),q=new THREE.Quaternion(),e3=new THREE.Euler(),v3=new THREE.Vector3(),s3=new THREE.Vector3(),rng=mulberry(W.semilla*53+9);let total=0;
+  chunks.forEach(c=>{
+    const L=[];
+    c.groups.forEach(g=>{const tips=g.hi.geometry.userData.tips;if(!tips||!tips.length)return;const e=new Float32Array(16);
+      for(let i=0;i<g.n;i++){g.hi.getMatrixAt(i,m4);m4.toArray(e);const tx=e[12],tz=e[14],rot=Math.atan2(-e[2],e[0]),sc=Math.hypot(e[0],e[2]);
+        for(let k=0;k<tips.length;k+=3){v3.set(tips[k],tips[k+1],tips[k+2]);const hh=tips[k+1];v3.applyMatrix4(m4);
+          for(let j=0;j<3;j++)L.push([v3.x+(rng()-.5)*1.1*sc,v3.y+(rng()-.5)*.8*sc,v3.z+(rng()-.5)*1.1*sc,tx,tz,hh,rot,sc,rng(),i/g.n]);}}});
+    if(!L.length){c.hojas=null;return;}
+    for(let i=L.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[L[i],L[j]]=[L[j],L[i]];}   // al azar: «cantidad» toma una muestra pareja
+    const geo=hojaGeo.clone(),sw=new Float32Array(L.length*4),ar=new Float32Array(L.length*2),mesh=new THREE.InstancedMesh(geo,hojaMat,L.length);
+    L.forEach((h,i)=>{e3.set(rng()*6.28,rng()*6.28,rng()*6.28);q.setFromEuler(e3);const z=(1.6+rng()*1.6)*Math.max(.7,h[7]);v3.set(h[0],h[1],h[2]);s3.set(z,z,z);m4.compose(v3,q,s3);mesh.setMatrixAt(i,m4);
+      sw.set([h[3],h[4],h[5],h[6]],i*4);ar.set([h[8],h[7]],i*2);});
+    geo.setAttribute('aSw',new THREE.InstancedBufferAttribute(sw,4));geo.setAttribute('aR',new THREE.InstancedBufferAttribute(ar,2));
+    mesh.instanceMatrix.needsUpdate=true;mesh.frustumCulled=false;mesh.visible=false;mesh.userData.n=L.length;mesh.count=Math.round(L.length*HOJA.cant);
+    scene.add(mesh);HOJA.mallas.push(mesh);c.hojas=mesh;total+=L.length;});
+  HOJA.total=total;
+}
+buildWorld=(orig=>function(){orig.apply(this,arguments);hojas();})(buildWorld);
+hojas();
+function pasoHojas(dt,vivo){
+  const k=1-Math.exp(-dt/2.5);HOJA.mask+=(HOJA.maskObj-HOJA.mask)*(1-Math.exp(-dt/(HOJA.maskObj>HOJA.mask?6:2)));
+  const cantAnt=HOJA.cant;HOJA.cant+=(HOJA.cantObj-HOJA.cant)*k;
+  const at=vivo?(num('attention')??.5):.5;hojaMat.uniforms.uMask.value=HOJA.mask*(.75+.25*at);
+  const camb=Math.abs(HOJA.cant-cantAnt)>1e-4;
+  chunks.forEach(c=>{if(!c.hojas)return;c.hojas.visible=c.groups.some(g=>g.hi.visible);if(camb)c.hojas.count=Math.round(c.hojas.userData.n*HOJA.cant*P.densidad);});
+}
+// color de la persona: tonos fríos a amarillos (violeta, azul, verde, amarillo), nunca rojos ni naranjas
+function paletaDe(vec,h){
+  const[a,t,bl,bh,g,...rest]=vec,sdm=(rest[0]+rest[1]+rest[2]+rest[3]+rest[4])/5,rel=rest[6]??.5,r=((h>>>0)%1000)/1000;
+  const hue=.15+.63*clamp(.5+(a+t-bl-bh)*.8+(r-.5)*.3,0,1),sat=.45+.5*clamp(sdm*4,0,1);
+  const hue2=clamp(hue+(r-.5)*.14,.13,.8);
+  return{a:new THREE.Color().setHSL(hue,sat,.48),b:new THREE.Color().setHSL(hue2,sat*.85,.62),cant:r2(clamp(.3+.5*g+.4*rel,.25,1))};
+}
 
 /* ---------- clima vivo ---------- */
 let MAP=[],CONG=false,ESTRES=.3,DERIVA=false,gyroS=[0,0];
@@ -211,7 +267,7 @@ function antes(t,dt0,now){
   const q=D[p+'quality'];if(!sim&&typeof q==='number'&&q<.6)offs.lejania=(offs.lejania||0)-(.6-q)*.5;
   const gy=D[p+'gyro'];if(Array.isArray(gy)){gyroS[0]+=(gy[0]-gyroS[0])*k1(1.5);gyroS[1]+=(gy[1]-gyroS[1])*k1(1.5);}
   for(const k in offs){GUARDA[k]=P[k];P[k]=clamp(P[k]+offs[k],PDEF[k][1],PDEF[k][2]);}
-  pasoFundido(now);
+  pasoFundido(now);pasoHojas(dt,vivo);
   if(now-hudT>120){hudT=now;pintarVivo(vivo,now);}
 }
 function despues(){for(const k in GUARDA){P[k]=GUARDA[k];delete GUARDA[k];}}
@@ -276,8 +332,9 @@ let CORT=0;function cortina(cb){const t0=performance.now();const paso=()=>{const
 let hudT=0;
 function pintarPersona(){
   const f=FIRMA;$('eCal').style.width=(f.estado==='calibrando'?Math.min(100,f.t/VENT*100):f.estado==='fija'?100:0)+'%';
+  $('eColor').style.background=f.estado==='fija'?`linear-gradient(90deg,#${f.pal.a.getHexString()},#${f.pal.b.getHexString()})`:'#555';
   $('ePers').textContent=f.estado==='calibrando'?`midiendo la firma… ${Math.floor(f.t)} de ${VENT} s con señal válida`+(f.id?` · ${f.id}`:''):
-    f.estado==='fija'?`bosque ${f.mundo.semilla} · árboles cada ${f.mundo.arboles} m · relieve ${f.mundo.relieve} · fauna ${Math.round(RIQ*100)}%`+(f.id?` · ${f.id}`:''):
+    f.estado==='fija'?`bosque ${f.mundo.semilla} · árboles cada ${f.mundo.arboles} m · relieve ${f.mundo.relieve} · hojas ${Math.round(f.pal.cant*100)}% · fauna ${Math.round(RIQ*100)}%`+(f.id?` · ${f.id}`:''):
     'sin persona: bosque base. Pulsa «nueva persona» cuando alguien se ponga el casco.';
 }
 function pintarVivo(vivo,now){
