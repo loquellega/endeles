@@ -9,7 +9,7 @@ s = leer('desarrollo', 'src.html')
 datos = '<script>\n' + leer('fuente', 'iching-es.js') + '\n</script>\n<script>\n' + leer('fuente', 'astro.js') + '\n</script>' + '\n<script>\n' + leer('fuente', 'planta.js') + '\n</script>'
 s = s.replace('<!--DATOS-->', datos)
 s = s.replace('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>', '<script src="lib/three.min.js"></script>')
-cab = '<!doctype html>\n<html lang="es">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
+cab = '<!doctype html>\n<html lang="es">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">\n'
 # app instalable: ícono, carátulas de arranque para iPhone y manifiesto
 CARAS = [(1320, 2868, 440, 956, 3), (1290, 2796, 430, 932, 3), (1206, 2622, 402, 874, 3), (1179, 2556, 393, 852, 3), (1284, 2778, 428, 926, 3), (1170, 2532, 390, 844, 3), (1125, 2436, 375, 812, 3), (1242, 2688, 414, 896, 3), (828, 1792, 414, 896, 2), (750, 1334, 375, 667, 2), (1080, 2340, 360, 780, 3)]
 pwa = ('<meta name="theme-color" content="#141414">\n<meta name="apple-mobile-web-app-capable" content="yes">\n'

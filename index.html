@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="theme-color" content="#141414">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -24,7 +24,7 @@
 <link rel="apple-touch-startup-image" media="(device-width: 360px) and (device-height: 780px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="iconos/caratula-1080x2340.png">
 <title>Endeles</title>
 <!--
-  Endeles v5.0 · bosque espectral para escuchar caminando.
+  Endeles v5.1 · bosque espectral para escuchar caminando.
   Diseño, investigación y desarrollo: Héctor Cruz Juárez — https://hectorcruz.com.mx
   Colección Alchemy of Meaning.
   Software libre bajo licencia GPL-3.0-or-later. Usa three.js (MIT).
@@ -35,7 +35,8 @@
 /* layout: lienzo a pantalla completa; ventanas de la colección en una columna a la izquierda; mapa e info abajo a la derecha */
 [hidden]{display:none!important}
 :root{--bg:#000;--fg:#fff;--dim:#8a8a8a;--rule:#fff;--panel:rgba(0,0,0,.84);--ink:#000;color-scheme:dark}
-html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);overflow:hidden;font:11px Inter,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Inter,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;-webkit-user-select:none;user-select:none}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);overflow:hidden;font:11px Inter,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Inter,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;-webkit-user-select:none;user-select:none;-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation;overscroll-behavior:none;-webkit-tap-highlight-color:transparent}
+.in,#pBody,#xinasOv .in,textarea,select{touch-action:pan-y}
 #gl{position:fixed;inset:0;display:block;width:100%;height:100%;touch-action:none;cursor:grab}
 button{background:var(--bg);color:var(--fg);border:1px solid var(--rule);font:11px Inter,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Inter,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;padding:4px 8px;cursor:pointer;border-radius:0;touch-action:manipulation}
 button.on,button:active{background:var(--fg);color:var(--ink)}
@@ -57,6 +58,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 #coach div:nth-child(2){border-right:0}
 #coach b{font-weight:normal;font-size:22px;color:#fff;letter-spacing:.04em}
 #coach p{grid-column:1/-1;margin:0;text-align:center;color:#ddd;font-size:12px;padding:0 16px calc(220px + env(safe-area-inset-bottom,0px))}
+#coach small{display:block;font-size:11px;color:#aaa;margin-top:10px}
 .in{padding:8px;display:grid;gap:6px}
 .row{display:grid;grid-template-columns:78px 1fr 40px;align-items:center;gap:6px;color:var(--dim)}
 .row output{color:var(--fg);text-align:right;font-variant-numeric:tabular-nums}
@@ -133,7 +135,7 @@ body.sinui .bar,body.sinui #col,body.sinui #map,body.sinui #info,body.sinui #hin
 .box p{margin:0;line-height:1.5;color:#ccc}
 .box .in{gap:10px;padding:12px}
 .box h4{margin:0;font-size:13px;font-weight:normal;letter-spacing:.04em}
-#bigWrap{width:min(92vw,calc(100vh - 150px),760px)}
+#bigWrap{width:min(92vw,calc(100vh - 150px),760px);width:min(92vw,calc(100dvh - 150px),760px)}
 #start{background:rgba(0,0,0,.55)}
 .ubox{width:min(580px,100%);max-height:calc(100% - 32px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;background:var(--bg)}
 .usteps{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #333}
@@ -244,7 +246,7 @@ body.encierre .bar,body.encierre #col,body.encierre #map,body.encierre #info,bod
   <button id="bUmbral3" class="solomovil">volver al umbral</button>
 </nav>
 <div id="joyBase" hidden><i></i></div>
-<div id="coach" hidden><div><b>mueve</b>pulgar izquierdo</div><div><b>mira</b>arrastra a la derecha</div><p>toca una gema para abrirla · toca el mapa para saltar</p></div>
+<div id="coach" hidden><div><b>camina</b>pulgar izquierdo<br>sobre el círculo</div><div><b>mira</b>arrastra con el pulgar<br>derecho</div><p>las luces son gemas: acércate o tócalas para abrirlas · toca el mapa para saltar<small>toca la pantalla para empezar</small></p></div>
 <button id="bShow" hidden>mostrar</button>
 
 <div id="col">
@@ -403,17 +405,19 @@ body.encierre .bar,body.encierre #col,body.encierre #map,body.encierre #info,bod
 </div>
 <div id="start" class="ov">
   <div class="win ubox" id="uBox" style="--pc:#b58cff">
-    <h3>Endeles <span>v5.0</span></h3>
+    <h3>Endeles <span>v5.1</span></h3>
     <nav class="usteps" id="uSteps"><button data-u="0" class="on">1 · bosque</button><button data-u="1">2 · datos</button><button data-u="2">3 · pregunta</button><button data-u="3">4 · tirada</button></nav>
     <div class="in" id="uIn">
       <section data-p="0">
         <h4 class="uh">Un bosque para escuchar caminando.</h4>
-        <p>Cada sonido vive en un lugar del bosque. Bajo seis de ellos brilla una gema con un hexagrama del I Ching:</p>
+        <p>Caminas por un bosque en blanco y negro. Cada sonido vive en un lugar: mientras más te acercas, más se oye.</p>
+        <p>Si quieres, antes de entrar le haces una pregunta al I Ching. Tu tirada construye el bosque y enciende seis gemas de luz; encuéntralas y ábrelas: cada una es una pista.</p>
         <div class="ucol" id="uCol"></div>
-        <p>Antes de entrar haces una tirada, y la tirada construye el bosque.</p>
         <p>En un claro crecen las semillas de <b>Xinas</b>: instantes de otras personas, sembrados para siempre.</p>
+        <p class="note">En el teléfono: pulgar izquierdo para caminar, arrastra con el derecho para mirar.</p>
         <p class="note" id="uHint"></p>
-        <div class="ubtn"><button class="on" id="uIr1">comenzar</button><button id="uGuia">¿cómo se lee?</button><button id="uDirecto">entrar sin tirada</button><button id="uMia" hidden>ir a mi planta</button></div>
+        <div class="ubtn"><button class="on" id="uIr1">hacer mi tirada</button><button id="uDirecto">solo caminar</button><button id="uMia" hidden>ir a mi planta</button></div>
+        <button class="liga" id="uGuia" style="border:0;background:none;padding:6px 0;color:var(--dim);text-decoration:underline">¿cómo se lee el I Ching?</button>
       </section>
       <section data-p="1" hidden>
         <h4 class="uh">Tus datos <span class="note">opcionales</span></h4>
@@ -492,7 +496,7 @@ body.encierre .bar,body.encierre #col,body.encierre #map,body.encierre #info,bod
 
 <div id="about" class="ov" hidden>
   <div class="win box">
-    <h3>Acerca de <span>Endeles v5.0</span></h3>
+    <h3>Acerca de <span>Endeles v5.1</span></h3>
     <div class="in">
       <p>Endeles es un bosque sin hojas hecho de tinta, niebla y grano. Se recorre a pie y se escucha: cada espacio sonoro tiene un radio donde suena completo y un alcance donde se pierde. El clima se modula como una partitura de estados, o se toma del cielo real de un lugar.</p>
       <p>Diseño, investigación y desarrollo: Héctor Cruz Juárez — <a href="https://hectorcruz.com.mx" target="_blank" rel="noopener" style="color:inherit">https://hectorcruz.com.mx</a><br>Colección Alchemy of Meaning.</p>
@@ -1533,7 +1537,7 @@ $('pistaOv').addEventListener('pointerdown',e=>{if(e.target===$('pistaOv'))cerra
 
 // ventana de pistas: estado, nacimiento y cuaderno
 let avisoT=null;
-function avisar(txt,ms){$('aviso').textContent=txt;$('aviso').hidden=false;clearTimeout(avisoT);avisoT=setTimeout(()=>{$('aviso').hidden=true;},ms||7000);}
+function avisar(txt,ms){if(!$('coach').hidden){clearTimeout(avisar.q);avisar.q=setTimeout(()=>avisar(txt,ms),800);return;}$('aviso').textContent=txt;$('aviso').hidden=false;clearTimeout(avisoT);avisoT=setTimeout(()=>{$('aviso').hidden=true;},ms||7000);}
 function renderMision(){
   if(CONSULTA){lineasMision();return;}
   // cuentan las gemas que hoy se pueden leer: la roja necesita tu nacimiento y la rosa tu tirada
@@ -2386,7 +2390,7 @@ function entrar(e){
   if(store.get('cieloReal',false))setTimeout(leerClima,1200);
   if(!audioOn){audioOn=true;startAmbient();startZumbido();SRCS.forEach(startContent);}
   $('start').hidden=true;nearGem=undefined;renderMision();
-  if(isTouch){$('joyBase').hidden=false;if(!store.get('guiaVista',false)){$('coach').hidden=false;clearTimeout(window.__cg);window.__cg=setTimeout(()=>{$('coach').hidden=true;},6000);store.set('guiaVista',true);}}
+  if(isTouch){$('joyBase').hidden=false;if(!store.get('guiaVista',false)){$('coach').hidden=false;clearTimeout(window.__cg);window.__cg=setTimeout(()=>{$('coach').hidden=true;},9000);store.set('guiaVista',true);}}
   else{$('hint').style.opacity=1;setTimeout(()=>{$('hint').style.opacity=0;},9000);}
 }
 $('coach').addEventListener('pointerdown',()=>{$('coach').hidden=true;});
