@@ -24,7 +24,7 @@
 <link rel="apple-touch-startup-image" media="(device-width: 360px) and (device-height: 780px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="iconos/caratula-1080x2340.png">
 <title>Endeles</title>
 <!--
-  Endeles v5.1 · bosque espectral para escuchar caminando.
+  Endeles v5.2 · bosque espectral para escuchar caminando.
   Diseño, investigación y desarrollo: Héctor Cruz Juárez — https://hectorcruz.com.mx
   Colección Alchemy of Meaning.
   Software libre bajo licencia GPL-3.0-or-later. Usa three.js (MIT).
@@ -405,7 +405,7 @@ body.encierre .bar,body.encierre #col,body.encierre #map,body.encierre #info,bod
 </div>
 <div id="start" class="ov">
   <div class="win ubox" id="uBox" style="--pc:#b58cff">
-    <h3>Endeles <span>v5.1</span></h3>
+    <h3>Endeles <span>v5.2</span></h3>
     <nav class="usteps" id="uSteps"><button data-u="0" class="on">1 · bosque</button><button data-u="1">2 · datos</button><button data-u="2">3 · pregunta</button><button data-u="3">4 · tirada</button></nav>
     <div class="in" id="uIn">
       <section data-p="0">
@@ -496,7 +496,7 @@ body.encierre .bar,body.encierre #col,body.encierre #map,body.encierre #info,bod
 
 <div id="about" class="ov" hidden>
   <div class="win box">
-    <h3>Acerca de <span>Endeles v5.1</span></h3>
+    <h3>Acerca de <span>Endeles v5.2</span></h3>
     <div class="in">
       <p>Endeles es un bosque sin hojas hecho de tinta, niebla y grano. Se recorre a pie y se escucha: cada espacio sonoro tiene un radio donde suena completo y un alcance donde se pierde. El clima se modula como una partitura de estados, o se toma del cielo real de un lugar.</p>
       <p>Diseño, investigación y desarrollo: Héctor Cruz Juárez — <a href="https://hectorcruz.com.mx" target="_blank" rel="noopener" style="color:inherit">https://hectorcruz.com.mx</a><br>Colección Alchemy of Meaning.</p>
@@ -2264,7 +2264,7 @@ function finalCierre(){
   F.classList.add('on');$('cQuedar').onclick=()=>finCierre(false);if($('cCompartir'))$('cCompartir').onclick=()=>compartirSemilla(sem);
 }
 function compartirSemilla(e){
-  const u=new URL('../xinas/',location.href);u.searchParams.set('s',e.s);if(e.t!=null)u.searchParams.set('t',Math.round(e.t).toString(36));
+  const u=new URL(/^endeles\./i.test(location.hostname)?'https://hectorcruz.com.mx/app/xinas/':'../xinas/',location.href);u.searchParams.set('s',e.s);if(e.t!=null)u.searchParams.set('t',Math.round(e.t).toString(36));
   const d={title:'Xinas',text:'Sembré el instante de mi retrato en Endeles: '+e.hex.n+' · '+(IC.hex[e.hex.n]?IC.hex[e.hex.n].n:''),url:u.href};
   if(navigator.share)navigator.share(d).catch(()=>{});else{try{navigator.clipboard.writeText(d.text+' '+d.url);}catch(err){}avisar('enlace copiado',3000);}
 }

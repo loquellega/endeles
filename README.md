@@ -63,6 +63,12 @@ Under six of those sounds glows a colored gem, the only color in the grey forest
 
 It is a static page: upload the folder to any web host or use GitHub Pages, and open it over https. The clearing of seeds needs PHP for `semillas.php` (it writes to a private `datos/` folder). three.js is bundled in `lib/`. To change the app, edit `desarrollo/src.html` or `fuente/*.js` and run `python3 desarrollo/construir.py`.
 
+## Dominio propio / Own domain
+
+Endeles vive en **https://endeles.hectorcruz.com.mx** (subdominio con raíz en esta misma carpeta). `semillas.php` acepta siembras desde cualquier `*.hectorcruz.com.mx` (CORS). Cuando el subdominio tenga SSL, `redireccion.htaccess` manda la ruta vieja `/app/endeles/` al dominio nuevo con el mismo enlace.
+
+Endeles lives at **https://endeles.hectorcruz.com.mx**; `semillas.php` accepts seeds from any `*.hectorcruz.com.mx` origin, and `redireccion.htaccess` forwards the old path once the subdomain has SSL.
+
 ## Capturas / Screenshots
 
 | | | |

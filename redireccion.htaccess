@@ -1,0 +1,12 @@
+# Endeles en su propio dominio: endeles.hectorcruz.com.mx
+#
+# Si el subdominio apunta a esta MISMA carpeta (public_html/app/endeles), copia estas
+# líneas en el .htaccess de esta carpeta (o renombra este archivo a .htaccess) SOLO
+# cuando https://endeles.hectorcruz.com.mx ya abra con su candado (SSL).
+# Quien llegue por la ruta vieja se va al dominio nuevo con el mismo enlace (?s=…&t=…).
+# El .htaccess de datos/ no se toca.
+
+RewriteEngine On
+RewriteCond %{HTTP_HOST} !^endeles\.hectorcruz\.com\.mx$ [NC]
+RewriteCond %{REQUEST_URI} !semillas\.php$ [NC]
+RewriteRule ^(.*)$ https://endeles.hectorcruz.com.mx/$1 [R=301,L,QSA]

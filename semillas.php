@@ -10,6 +10,16 @@
    La carpeta datos/ debe poder escribirla PHP y está cerrada al público con su .htaccess.
    Colección Alchemy of Meaning · Héctor Cruz Juárez · GPL-3.0 */
 
+/* Xinas vive en hectorcruz.com.mx y Endeles en su subdominio: se permite sembrar desde cualquier *.hectorcruz.com.mx */
+$origen = $_SERVER['HTTP_ORIGIN'] ?? '';
+if (preg_match('#^https://([a-z0-9-]+\.)*hectorcruz\.com\.mx$#i', $origen)) {
+  header('Access-Control-Allow-Origin: ' . $origen);
+  header('Vary: Origin');
+  header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+  header('Access-Control-Allow-Headers: Content-Type');
+  header('Access-Control-Max-Age: 86400');
+}
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') { http_response_code(204); exit; }
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
 
