@@ -69,6 +69,14 @@ Endeles vive en **https://endeles.hectorcruz.com.mx** (subdominio con raíz en e
 
 Endeles lives at **https://endeles.hectorcruz.com.mx**; `semillas.php` accepts seeds from any `*.hectorcruz.com.mx` origin, and `redireccion.htaccess` forwards the old path once the subdomain has SSL.
 
+## Idiomas · Languages · Langues
+
+Endeles habla español, inglés y francés, incluido el I Ching completo (`fuente/iching-en.js`, `fuente/iching-fr.js`). Elige el idioma del teléfono, se cambia en el umbral (es · en · fr) y llega desde Xinas con `?l=`. Los textos de la interfaz están en `fuente/i18n/`.
+
+Endeles speaks Spanish, English and French, including the full I Ching. It follows the phone’s language, can be switched on the threshold, and arrives from Xinas with `?l=`.
+
+**En français.** Endeles est une forêt spectrale à écouter en marchant : arbres sans feuilles, encre, brouillard et grain de pellicule. Avant d’entrer, on peut poser une question au Yi King ; le tirage construit la forêt et allume six gemmes. Dans une clairière poussent les graines de Xinas.
+
 ## Capturas / Screenshots
 
 | | | |

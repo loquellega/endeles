@@ -6,7 +6,12 @@ import os
 raiz = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 leer = lambda *p: open(os.path.join(raiz, *p), encoding='utf-8').read()
 s = leer('desarrollo', 'src.html')
-datos = '<script>\n' + leer('fuente', 'iching-es.js') + '\n</script>\n<script>\n' + leer('fuente', 'astro.js') + '\n</script>' + '\n<script>\n' + leer('fuente', 'planta.js') + '\n</script>'
+import json
+dic = ''.join(f"window.I18N=window.I18N||{{}};I18N.{k}={json.dumps(json.loads(leer('fuente','i18n',k+'.json')), ensure_ascii=False)};\n" for k in ('en','fr'))
+idioma = '<script>\n' + dic + leer('fuente', 'idioma.js') + '\nIDIOMA.aplicar();\n</script>\n'
+ichings = ''.join('<script>\n' + leer('fuente', f'iching-{k}.js') + '\n</script>\n' for k in ('en', 'fr') if os.path.exists(os.path.join(raiz, 'fuente', f'iching-{k}.js')))
+elige = "<script>if(IDIOMA.L==='en'&&window.ICHING_EN)window.ICHING=window.ICHING_EN;else if(IDIOMA.L==='fr'&&window.ICHING_FR)window.ICHING=window.ICHING_FR;</script>\n"
+datos = idioma + '<script>\n' + leer('fuente', 'iching-es.js') + '\n</script>\n<script>\n' + leer('fuente', 'astro.js') + '\n</script>' + '\n<script>\n' + leer('fuente', 'planta.js') + '\n</script>\n' + ichings + elige
 s = s.replace('<!--DATOS-->', datos)
 s = s.replace('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>', '<script src="lib/three.min.js"></script>')
 cab = '<!doctype html>\n<html lang="es">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">\n'
